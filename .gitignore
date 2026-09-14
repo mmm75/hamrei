@@ -1,0 +1,12 @@
+*
+!.gitignore
+
+!themes/
+!themes/MMDWC/
+!themes/MMDWC/**
+
+!plugins/
+!plugins/mmdwc-*/
+!plugins/mmdwc-*/**
+
+.DS_Store

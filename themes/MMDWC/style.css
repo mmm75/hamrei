@@ -1,0 +1,21 @@
+/*
+Theme Name: MMDWC
+Author: MATTIEU MOREAU DOMECQ WEB CONCEPTION
+Author URI: https://www.mattieumoreaudomecq.com
+Version: 1.0
+*/
+
+/* 
+-------------------------------------------------------------------------------*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
