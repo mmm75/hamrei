@@ -19,7 +19,7 @@
 	<header id="header">
 
 		<a href="<?php echo esc_url(home_url('/')); ?>">
-			<?php bloginfo('name'); ?>
+			bienvenu chez <?php bloginfo('name'); ?>
 
 		</a>
 
