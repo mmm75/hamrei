@@ -1,10 +1,44 @@
 <?php
 
 //////////////////////////////////////////////////////////////
+// RESET CSS
+//////////////////////////////////////////////////////////////
+
+add_action('wp_enqueue_scripts', 'theme_load_reset_css', 5);
+
+function theme_load_reset_css()
+{
+	$reset_path = get_template_directory() . '/assets/css/reset.css';
+
+	wp_enqueue_style(
+		'reset',
+		get_template_directory_uri() . '/assets/css/reset.css',
+		array(),
+		file_exists($reset_path) ? filemtime($reset_path) : null
+	);
+}
+
+//////////////////////////////////////////////////////////////
+// ADOBE FONTS
+//////////////////////////////////////////////////////////////
+
+// add_action('wp_enqueue_scripts', 'theme_load_adobe_fonts', 6);
+
+function theme_load_adobe_fonts()
+{
+	wp_enqueue_style(
+		'adobe-fonts',
+		'https://use.typekit.net/rkp3gyv.css',
+		array(),
+		null
+	);
+}
+
+//////////////////////////////////////////////////////////////
 // BOOTSTRAP CSS
 //////////////////////////////////////////////////////////////
 
-add_action('wp_enqueue_scripts', 'theme_load_bootstrap_css', 10);
+// add_action('wp_enqueue_scripts', 'theme_load_bootstrap_css', 10);
 
 function theme_load_bootstrap_css()
 {
@@ -20,7 +54,7 @@ function theme_load_bootstrap_css()
 // BOOTSTRAP JS
 //////////////////////////////////////////////////////////////
 
-add_action('wp_enqueue_scripts', 'theme_load_bootstrap_js', 20);
+// add_action('wp_enqueue_scripts', 'theme_load_bootstrap_js', 20);
 
 function theme_load_bootstrap_js()
 {
@@ -37,7 +71,7 @@ function theme_load_bootstrap_js()
 // GSAP
 //////////////////////////////////////////////////////////////
 
-add_action('wp_enqueue_scripts', 'theme_load_gsap', 20);
+// add_action('wp_enqueue_scripts', 'theme_load_gsap', 20);
 
 function theme_load_gsap()
 {
@@ -54,7 +88,7 @@ function theme_load_gsap()
 // GSAP SCROLLTRIGGER
 //////////////////////////////////////////////////////////////
 
-add_action('wp_enqueue_scripts', 'theme_load_scrolltrigger', 21);
+// add_action('wp_enqueue_scripts', 'theme_load_scrolltrigger', 21);
 
 function theme_load_scrolltrigger()
 {
@@ -71,7 +105,7 @@ function theme_load_scrolltrigger()
 // GSAP SCROLLTO
 //////////////////////////////////////////////////////////////
 
-add_action('wp_enqueue_scripts', 'theme_load_scrollto', 22);
+// add_action('wp_enqueue_scripts', 'theme_load_scrollto', 22);
 
 function theme_load_scrollto()
 {
