@@ -18,39 +18,180 @@
 
 	<header id="header" <?php if (is_page_template('page-HOME.php')) : ?> class="absolute-header" <?php endif; ?>>
 
-		<div class="header__logo">
+		<!-- HEADER MAIN ------------------------------------------------------------------------------------------------>
 
-			<a href="<?php echo esc_url(home_url('/')); ?>">
+		<div class="header__main">
 
-				<img
-					src="<?php echo get_template_directory_uri(); ?>/assets/img/HAMREI_LOGO_SMALL-temp.png"
-					class="logo-hamrei-small"
-					alt="HAMREI">
+			<div class="header__logo">
 
-			</a>
+				<a href="<?php echo esc_url(home_url('/')); ?>">
+
+					<img
+						src="<?php echo get_template_directory_uri(); ?>/assets/img/HAMREI_LOGO_SMALL-temp.png"
+						class="logo-hamrei-small"
+						alt="HAMREI">
+
+				</a>
+
+			</div>
+
+			<nav class="header__nav">
+
+				<div class="header__menu">
+
+					<?php
+					wp_nav_menu([
+						'menu'       => 'Menu Header',
+						'container'  => false,
+						'menu_class' => 'header__menu-list',
+					]);
+					?>
+
+				</div>
+
+				<div class="header__languages">
+
+					PT - EN
+
+				</div>
+
+			</nav>
 
 		</div>
 
-		<nav class="header__nav">
+		<!-- END HEADER MAIN ------------------------------------------------------------------------------------------------>
 
-			<div class="header__menu">
+		<!-- HEADER COLLECTION MENU CAT PARENT ------------------------------------------------------------------------------------------------>
+
+		<?php if (is_post_type_archive('piece') || is_tax('piece_category')) : ?>
+
+			<nav class="collection-nav">
+
+				<a
+					href="<?php echo esc_url(home_url('/collection/')); ?>"
+					class="collection-nav__all"
+					data-text="All">
+					All
+				</a>
+
+				<ul class="collection-nav__categories">
+
+					<?php
+					$piece_categories = get_terms([
+						'taxonomy'   => 'piece_category',
+						'parent'     => 0,
+						'hide_empty' => false,
+						'orderby'    => 'term_order',
+						'order'      => 'ASC',
+					]);
+
+					if (!is_wp_error($piece_categories)) :
+
+						foreach ($piece_categories as $piece_category) :
+
+							$is_current_category = is_tax('piece_category', $piece_category->term_id);
+
+							$is_current_category_parent = (
+								is_tax('piece_category') &&
+								get_queried_object()->parent == $piece_category->term_id
+							);					?>
+
+							<li class="collection-nav__category-item<?php echo $is_current_category ? ' current-cat' : ''; ?><?php echo $is_current_category_parent ? ' current-cat-parent' : ''; ?>">
+								<a
+									href="<?php echo esc_url(get_term_link($piece_category)); ?>"
+									class="collection-nav__category"
+									data-text="<?php echo esc_attr($piece_category->name); ?>">
+									<?php echo esc_html($piece_category->name); ?>
+								</a>
+
+							</li>
+
+					<?php
+						endforeach;
+
+					endif;
+					?>
+
+				</ul>
+
+				<div class="collection-nav__grid-controls">
+
+					<a
+						class="collection-nav__grid-control collection-nav__grid-control--more"
+						data-text="More +">
+						More +
+					</a>
+
+					<a
+						class="collection-nav__grid-control collection-nav__grid-control--less"
+						data-text="Less −">
+						Less −
+					</a>
+
+				</div>
+
+			</nav>
+
+			<!-- HEADER COLLECTION MENU CAT CHILD ------------------------------------------------------------------------------------------------>
+
+			<?php if (is_tax('piece_category')) : ?>
 
 				<?php
-				wp_nav_menu([
-					'menu'       => 'Menu Header',
-					'container'  => false,
-					'menu_class' => 'header__menu-list',
+				$current_category = get_queried_object();
+
+				if ($current_category->parent) {
+					$parent_category = get_term($current_category->parent, 'piece_category');
+				} else {
+					$parent_category = $current_category;
+				}
+
+				$child_categories = get_terms([
+					'taxonomy'   => 'piece_category',
+					'parent'     => $parent_category->term_id,
+					'hide_empty' => false,
+					'orderby'    => 'term_order',
+					'order'      => 'ASC',
 				]);
 				?>
 
-			</div>
+				<?php if (!is_wp_error($child_categories) && !empty($child_categories)) : ?>
 
-			<div class="header__languages">
-				PT - EN
-			</div>
+					<nav class="collection-subnav">
 
-		</nav>
+						<div class="collection-subnav__spacer"></div>
 
+						<ul class="collection-subnav__categories">
+
+							<?php foreach ($child_categories as $child_category) : ?>
+
+								<?php $is_current_category = $current_category->term_id === $child_category->term_id; ?>
+
+								<li class="collection-subnav__category-item<?php echo $is_current_category ? ' current-cat' : ''; ?>">
+
+									<a
+										href="<?php echo esc_url(get_term_link($child_category)); ?>"
+										class="collection-subnav__category"
+										data-text="<?php echo esc_attr($child_category->name); ?>">
+										<?php echo esc_html($child_category->name); ?>
+									</a>
+
+								</li>
+
+							<?php endforeach; ?>
+
+						</ul>
+
+					</nav>
+
+				<?php endif; ?>
+
+			<?php endif; ?>
+
+			<!-- END HEADER COLLECTION MENU CAT CHILD ------------------------------------------------------------------------------------------------>
+
+		<?php endif; ?>
+
+		<!-- END HEADER COLLECTION MENU CAT PARENT ------------------------------------------------------------------------------------------------>
 	</header>
 
 	<main id="main">
