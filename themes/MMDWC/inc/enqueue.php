@@ -119,6 +119,33 @@ function theme_load_scrollto()
 }
 
 //////////////////////////////////////////////////////////////
+// SWIPER
+//////////////////////////////////////////////////////////////
+
+add_action('wp_enqueue_scripts', 'theme_load_swiper', 25);
+
+function theme_load_swiper()
+{
+	$swiper_css_path = get_template_directory() . '/assets/vendor/swiper/swiper-bundle.min.css';
+	$swiper_js_path = get_template_directory() . '/assets/vendor/swiper/swiper-bundle.min.js';
+
+	wp_enqueue_style(
+		'swiper',
+		get_template_directory_uri() . '/assets/vendor/swiper/swiper-bundle.min.css',
+		array(),
+		file_exists($swiper_css_path) ? filemtime($swiper_css_path) : null
+	);
+
+	wp_enqueue_script(
+		'swiper',
+		get_template_directory_uri() . '/assets/vendor/swiper/swiper-bundle.min.js',
+		array(),
+		file_exists($swiper_js_path) ? filemtime($swiper_js_path) : null,
+		true
+	);
+}
+
+//////////////////////////////////////////////////////////////
 // THEME CSS
 //////////////////////////////////////////////////////////////
 
@@ -149,8 +176,36 @@ function theme_load_scripts()
 	wp_enqueue_script(
 		'functions',
 		get_template_directory_uri() . '/assets/js/functions.js',
-		array('jquery'),
+		array('jquery', 'swiper'),
 		file_exists($functions_js_path) ? filemtime($functions_js_path) : null,
 		true
+	);
+}
+
+//////////////////////////////////////////////////////////////
+// HERO VIDEOS JS
+//////////////////////////////////////////////////////////////
+
+add_action('wp_enqueue_scripts', 'theme_load_hero_videos', 30);
+
+function theme_load_hero_videos()
+{
+	$hero_videos_js_path = get_template_directory() . '/assets/js/hero-videos.js';
+
+	wp_enqueue_script(
+		'hero-videos',
+		get_template_directory_uri() . '/assets/js/hero-videos.js',
+		array('jquery'),
+		file_exists($hero_videos_js_path) ? filemtime($hero_videos_js_path) : null,
+		true
+	);
+
+	wp_localize_script(
+		'hero-videos',
+		'hamreiHero',
+		[
+			'ajaxUrl' => admin_url('admin-ajax.php'),
+			'schedule' => hamrei_get_hero_video_schedule(),
+		]
 	);
 }

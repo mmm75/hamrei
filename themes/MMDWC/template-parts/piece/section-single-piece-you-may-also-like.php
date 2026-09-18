@@ -2,7 +2,7 @@
 
             <div class="section-header">
 
-                <h2>EXPLORE OUR E-SHOP</h2>
+                <h2>YOU MAY ALSO LIKE</h2>
 
             </div>
 

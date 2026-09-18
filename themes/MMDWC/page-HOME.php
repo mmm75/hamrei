@@ -10,28 +10,7 @@ Template Name: TEMPLATE HOME
 
         <!-- HERO SECTION ------------------------------------------------------------------------------------------------>
 
-        <section id="home-hero" class="home__hero">
-
-            <h1><img
-                    src="<?php echo get_template_directory_uri(); ?>/assets/img/HAMREI_LOGO_BIG.png"
-                    class="logo-hamrei-big"
-                    alt="HAMREI"></h1>
-
-            <video
-                id="video"
-                autoplay
-                muted
-                loop
-                playsinline
-                disablepictureinpicture
-                webkit-playsinline
-                preload="metadata">
-                <source
-                    src="https://vz-809edc8b-256.b-cdn.net/23d6a690-db6b-420c-a9c5-058a19418956/play_720p.mp4"
-                    type="video/mp4">
-            </video>
-
-        </section>
+        <?php get_template_part("/template-parts/section-hero"); ?>
 
         <!-- END HERO SECTION ------------------------------------------------------------------------------------------------>
 
@@ -39,7 +18,11 @@ Template Name: TEMPLATE HOME
 
         <section id="home-highlights" class="home__highlights">
 
-            <h2>HIGHLIGHTS</h2>
+            <div class="section-header">
+
+                <h2>HIGHLIGHTS</h2>
+
+            </div>
 
             <!-- HIGHTLIGHTS ROW ------------------------------------------------------------------------------------------------>
 
@@ -165,91 +148,65 @@ Template Name: TEMPLATE HOME
 
             <!-- HIGHTLIGHTS GRID ------------------------------------------------------------------------------------------------>
 
+            <?php
+            $highlight_categories = get_terms([
+                'taxonomy'   => 'piece_category',
+                'parent'     => 0,
+                'hide_empty' => false,
+                'exclude'    => [
+                    get_term_by('slug', 'art', 'piece_category')->term_id,
+                    get_term_by('slug', 'in-stock', 'piece_category')->term_id,
+                ],
+                'orderby'    => 'term_order',
+                'order'      => 'ASC',
+            ]);
+            ?>
+
             <div class="highlights__grid">
 
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
+                <?php if (!is_wp_error($highlight_categories)) : ?>
 
-                <div class="highlights__grid-item">
+                    <?php foreach ($highlight_categories as $highlight_category) : ?>
 
-                    <div class="media-container media-container--square">
+                        <?php
+                        $featured_image = get_field('featured_image', 'piece_category_' . $highlight_category->term_id);                        ?>
 
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/lighting-pic.jpg" alt="">
+                        <!-- ITEM ------------------------------------------------------------------------------------------------>
 
-                    </div>
+                        <div class="highlights__grid-item">
 
-                </div>
+                            <a href="<?php echo esc_url(get_term_link($highlight_category)); ?>">
 
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
+                                <?php if ($featured_image) : ?>
 
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
+                                    <div class="media-container media-container--square">
 
-                <div class="highlights__grid-item">
+                                        <?php echo wp_get_attachment_image($featured_image, 'full'); ?>
 
-                    <div class="media-container media-container--square">
+                                    </div>
 
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/objects.jpg" alt="">
+                                <?php endif; ?>
 
-                    </div>
+                                <div class="highlights__grid-item--name background-<?php echo esc_attr($highlight_category->slug); ?>">
 
-                </div>
+                                    <h3><?php echo esc_html($highlight_category->name); ?></h3>
 
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
+                                    <img
+                                        src="<?php echo get_template_directory_uri(); ?>/assets/img/HAMREI_LOGO_SMALL.svg"
+                                        class="logo-hamrei-small"
+                                        alt="HAMREI">
 
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
+                                </div>
 
-                <div class="highlights__grid-item">
+                            </a>
 
-                    <div class="media-container media-container--square">
+                        </div>
 
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/rugs-pic.jpg" alt="">
+                        <!-- END ITEM ------------------------------------------------------------------------------------------------>
 
-                    </div>
+                    <?php endforeach; ?>
 
-                </div>
-
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
-
-                <div class="highlights__grid-item">
-
-                    <div class="media-container media-container--square">
-
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/seating-pic.jpg" alt="">
-
-                    </div>
-
-                </div>
-
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
-
-                <div class="highlights__grid-item">
-
-                    <div class="media-container media-container--square">
-
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/storage-pic.jpg" alt="">
-
-                    </div>
-
-                </div>
-
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
-
-                <div class="highlights__grid-item">
-
-                    <div class="media-container media-container--square">
-
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/tables-pic.jpg" alt="">
-
-                    </div>
-
-                </div>
-
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
+                <?php endif; ?>
 
             </div>
 
@@ -261,100 +218,27 @@ Template Name: TEMPLATE HOME
 
         <!-- ABOUT SECTION ------------------------------------------------------------------------------------------------>
 
-        <section id="home-about" class="home__about">
+        <section id="home-about" class="about__section">
 
-            <h2>ABOUT US</h2>
+            <div class="section-header">
 
-            <!-- ABOUT TOP ------------------------------------------------------------------------------------------------>
-
-            <div class="home__about-top">
-
-                <div class="home__about-top-left">
-
-                    <div class="media-container media-container--square">
-
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/hamreifn1665-1-scaled.jpg" alt="">
-
-                    </div>
-
-                </div>
-
-                <div class="home__about-top-right">
-
-                    <div class="home__about-quote">
-
-                        <blockquote>
-                            ‘Longevity is the most elegant form of sustainability’
-                        </blockquote>
-
-                        <div class="home__about-signature">
-                            HAMREI
-                        </div>
-
-                    </div>
-
-                    <div class="p--big">
-
-                        <p>Based in Lisbon, Portugal, and founded by Anglo-Brazilian artist and designer Hamrei in 2022, the studio creates sculptural work that reflects his double heritage, both raw and refined</p>
-
-                    </div>
-
-                    <div class="p--normal">
-
-                        <p>Each HAMREI piece is created with the highest quality materials, selected for their longevity and character, and comes to life through close collaboration with master craftmen, primarily based in Europe.</p>
-
-                        <p>Recognised by collectors and galleries worldwide, HAMREI's world extends beyond the objects, occasionally into the rooms they inhabit, into a philosophy: beauty that endures, allure that draws you in and design that stands the test of time. Because longevity is the most elegant form of sustainability.</p>
-
-                    </div>
-
-                    <a href="#" class="button">
-                        DISCOVER
-                    </a>
-
-                </div>
+                <h2>ABOUT US</h2>
 
             </div>
 
-            <!-- END ABOUT TOP ------------------------------------------------------------------------------------------------>
+            <!-- ABOUT SECTION 1 ------------------------------------------------------------------------------------------------>
+
+            <?php get_template_part("/template-parts/about/section-about-1"); ?>
+
+            <!-- END ABOUT SECTION 1 ------------------------------------------------------------------------------------------------>
+
+            <!-- ABOUT SECTION 2 ------------------------------------------------------------------------------------------------>
+
+            <?php get_template_part("/template-parts/about/section-about-2"); ?>
+
+            <!-- END ABOUT SECTION 2 ------------------------------------------------------------------------------------------------>
 
             <!-- ABOUT BOTTOM ------------------------------------------------------------------------------------------------>
-
-            <div class="home__about-bottom">
-
-                <div class="home__about-bottom-left">
-
-
-                    <div class="p--big">
-
-                        <p>Based in Marvila, Lisbon's art district, HAMREI's creative studio doubles up as an appointment-only showroom.</p>
-
-                    </div>
-
-                    <div class="p--normal">
-
-                        <p>Transformed from its days as a nightclub, it is a place where ideas, people, and creativity naturally blend. Within its walls, HAMREI's own design and art pieces coexist with a selection from his personal collection, each piece a glimpse into his evolving creative world. An industrial setting for enduring beauty. Contact us to find out more about using the Studio for private events, dinners, and photoshoots.</p>
-
-                    </div>
-
-                    <a href="#" class="button">
-                        DISCOVER
-                    </a>
-
-                </div>
-
-                <div class="home__about-bottom-right">
-
-                    <img src="http://localhost:8888/wp-content/uploads/2026/09/studio-photos.jpg" alt="">
-
-                    <div class="home__about-studio-label">
-                        THE STUDIO
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- END ABOUT BOTTOM ------------------------------------------------------------------------------------------------>
 
         </section>
 

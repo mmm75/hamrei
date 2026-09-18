@@ -131,3 +131,31 @@ function hamrei_piece_category_rewrite_rules()
 		);
 	}
 }
+
+//////////////////////////////////////////////////////////////
+// ADD BODY CLASS WHEN PIECE CATEGORY HAS CHILDREN
+//////////////////////////////////////////////////////////////
+
+add_filter('body_class', 'hamrei_piece_category_body_class');
+
+function hamrei_piece_category_body_class($classes)
+{
+	if (!is_tax('piece_category')) {
+		return $classes;
+	}
+
+	$term = get_queried_object();
+
+	$children = get_terms([
+		'taxonomy'   => 'piece_category',
+		'parent'     => $term->term_id,
+		'hide_empty' => false,
+		'number'     => 1,
+	]);
+
+	if (!is_wp_error($children) && !empty($children)) {
+		$classes[] = 'tax-has-children';
+	}
+
+	return $classes;
+}

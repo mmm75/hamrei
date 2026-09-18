@@ -4,6 +4,14 @@ $pieces = $args['query'];
 
 ?>
 
+<h1 class="visually-hidden">
+    <?php if (is_post_type_archive('piece')) : ?>
+        Collection
+    <?php elseif (is_tax('piece_category')) : ?>
+        <?php single_term_title(); ?>
+    <?php endif; ?>
+</h1>
+
 <div id="collection-grid" class="collection-grid collection-grid--2">
 
     <?php while ($pieces->have_posts()) : $pieces->the_post(); ?>

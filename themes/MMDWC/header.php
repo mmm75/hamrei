@@ -16,18 +16,18 @@
 
 	<?php wp_body_open(); ?>
 
-	<header id="header" <?php if (is_page_template('page-HOME.php')) : ?> class="absolute-header" <?php endif; ?>>
+	<header id="header" <?php if (is_page_template(['page-HOME.php', 'page-ABOUT.php', 'page-CONTACT.php'])) : ?> class="absolute-header" <?php endif; ?>>
 
 		<!-- HEADER MAIN ------------------------------------------------------------------------------------------------>
 
-		<div class="header__main">
+		<div class="header__main header-bar">
 
 			<div class="header__logo">
 
 				<a href="<?php echo esc_url(home_url('/')); ?>">
 
 					<img
-						src="<?php echo get_template_directory_uri(); ?>/assets/img/HAMREI_LOGO_SMALL-temp.png"
+						src="<?php echo get_template_directory_uri(); ?>/assets/img/HAMREI_LOGO_SMALL.svg"
 						class="logo-hamrei-small"
 						alt="HAMREI">
 
@@ -61,11 +61,80 @@
 
 		<!-- END HEADER MAIN ------------------------------------------------------------------------------------------------>
 
+		<!-- HEADER PIECE SUBNAV ------------------------------------------------------------------------------------------------>
+
+		<?php if (is_singular('piece')) : ?>
+
+			<?php
+			$piece_categories = get_the_terms(get_the_ID(), 'piece_category');
+			$parent_category = null;
+			$child_category = null;
+
+			if ($piece_categories && !is_wp_error($piece_categories)) {
+				foreach ($piece_categories as $piece_category) {
+					if ($piece_category->parent) {
+						$child_category = $piece_category;
+						$parent_category = get_term($piece_category->parent, 'piece_category');
+						break;
+					}
+				}
+
+				if (!$parent_category) {
+					foreach ($piece_categories as $piece_category) {
+						if (!$piece_category->parent) {
+							$parent_category = $piece_category;
+							break;
+						}
+					}
+				}
+			}
+			?>
+
+			<nav class="piece-subnav header-bar">
+
+				<a
+					href="<?php echo esc_url(get_post_type_archive_link('piece')); ?>"
+					class="piece-subnav__back"
+					data-collection-url="<?php echo esc_url(get_post_type_archive_link('piece')); ?>"
+					data-text="GO BACK">
+					GO BACK
+				</a>
+
+				<?php if ($parent_category && !is_wp_error($parent_category)) : ?>
+
+					<a
+						href="<?php echo esc_url(get_term_link($parent_category)); ?>"
+						class="piece-subnav__category"
+						data-text="<?php echo esc_attr($parent_category->name); ?>">
+						<?php echo esc_html($parent_category->name); ?>
+					</a>
+
+				<?php endif; ?>
+
+				<?php if ($child_category) : ?>
+
+					<a
+						href="<?php echo esc_url(get_term_link($child_category)); ?>"
+						class="piece-subnav__category"
+						data-text="<?php echo esc_attr($child_category->name); ?>">
+						<?php echo esc_html($child_category->name); ?>
+					</a>
+
+				<?php endif; ?>
+
+				<div class="piece-subnav__spacer"></div>
+
+			</nav>
+
+		<?php endif; ?>
+
+		<!-- END HEADER PIECE SUBNAV ------------------------------------------------------------------------------------------------>
+
 		<!-- HEADER COLLECTION MENU CAT PARENT ------------------------------------------------------------------------------------------------>
 
 		<?php if (is_post_type_archive('piece') || is_tax('piece_category')) : ?>
 
-			<nav class="collection-nav">
+			<nav class="collection-nav header-bar">
 
 				<a
 					href="<?php echo esc_url(home_url('/collection/')); ?>"
@@ -156,7 +225,7 @@
 
 				<?php if (!is_wp_error($child_categories) && !empty($child_categories)) : ?>
 
-					<nav class="collection-subnav">
+					<nav class="collection-subnav header-bar">
 
 						<div class="collection-subnav__spacer"></div>
 

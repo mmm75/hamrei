@@ -6,7 +6,7 @@ global $wp_query;
 if (have_posts()) :
 
     get_template_part(
-        'template-parts/collection-grid',
+        'template-parts/collection/collection-grid',
         null,
         [
             'query' => $wp_query,
