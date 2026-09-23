@@ -159,3 +159,33 @@ function hamrei_piece_category_body_class($classes)
 
 	return $classes;
 }
+
+//////////////////////////////////////////////////////////////
+// REGISTER PIECE FAMILY TAXONOMY
+//////////////////////////////////////////////////////////////
+
+add_action('init', 'hamrei_register_piece_family_taxonomy');
+
+function hamrei_register_piece_family_taxonomy()
+{
+	register_taxonomy('family', ['piece'], [
+		'labels' => [
+			'name'          => 'Families',
+			'singular_name' => 'Family',
+			'search_items'  => 'Search Families',
+			'all_items'     => 'All Families',
+			'edit_item'     => 'Edit Family',
+			'update_item'   => 'Update Family',
+			'add_new_item'  => 'Add New Family',
+			'new_item_name' => 'New Family Name',
+			'menu_name'     => 'Families',
+		],
+		'public'            => false,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'show_in_rest'      => true,
+		'hierarchical'      => true,
+		'rewrite'           => false,
+		'query_var'         => false,
+	]);
+}

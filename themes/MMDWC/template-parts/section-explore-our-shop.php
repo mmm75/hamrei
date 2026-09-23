@@ -1,26 +1,30 @@
-        <section id="shop-row-items" class="shop-row-items">
+<?php $products = get_field('selection', 9); ?>
 
-            <div class="section-header">
+<?php if ($products) : ?>
 
-                <h2>EXPLORE OUR E-SHOP</h2>
+    <section id="shop-row-items" class="shop-row-items">
 
-            </div>
+        <div class="section-header">
 
-            <!--EXPLORE OUR SHOP ROW ------------------------------------------------------------------------------------------------>
+            <h2><?php esc_html_e('explore our e-shop', 'mmdwc'); ?></h2>
 
-            <div class="shop-row-items__row">
+        </div>
 
-                <!--EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
+        <!-- EXPLORE OUR SHOP ROW ------------------------------------------------------------------------------------------------>
+
+        <div class="shop-row-items__row">
+
+            <?php foreach ($products as $product_id) : ?>
+
+                <!-- EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
 
                 <div class="shop-row-items__row-item">
 
-                    <a href="">
+                    <a href="<?php echo esc_url(get_permalink($product_id)); ?>">
 
                         <div class="media-container media-container--3-4">
 
-                            <img
-                                src="http://localhost:8888/wp-content/uploads/2026/09/product-1.jpg"
-                                alt="">
+                            <?php echo get_the_post_thumbnail($product_id, 'full'); ?>
 
                         </div>
 
@@ -30,132 +34,30 @@
 
                         <h3 class="item-title">
 
-                            <strong>NAME</strong>
+                            <strong><?php echo get_field('title', $product_id); ?></strong>
 
-                            <span>— OBJECT</span>
+                            <span>— <?php echo get_field('sub-title', $product_id); ?></span>
 
                         </h3>
 
-                        <a href="#" class="button">
-                            DISCOVER
+                        <a href="<?php echo esc_url(get_permalink($product_id)); ?>" class="custom-button">
+
+                            <?php esc_html_e('discover', 'mmdwc'); ?>
+
                         </a>
 
                     </div>
 
                 </div>
 
-                <!--END EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
+                <!-- END EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
 
-                <!--EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
+            <?php endforeach; ?>
 
-                <div class="shop-row-items__row-item">
+        </div>
 
-                    <a href="">
+        <!-- END EXPLORE OUR SHOP ROW ------------------------------------------------------------------------------------------------>
 
-                        <div class="media-container media-container--3-4">
+    </section>
 
-                            <img
-                                src="http://localhost:8888/wp-content/uploads/2026/09/product-2.jpg"
-                                alt="">
-
-                        </div>
-
-                    </a>
-
-                    <div class="shop-row-items__row-content">
-
-                        <h3 class="item-title">
-
-                            <strong>NAME</strong>
-
-                            <span>— OBJECT</span>
-
-                        </h3>
-
-                        <a href="#" class="button">
-                            DISCOVER
-                        </a>
-
-                    </div>
-
-                </div>
-
-                <!--END EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
-
-                <!--EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
-
-                <div class="shop-row-items__row-item">
-
-                    <a href="">
-
-                        <div class="media-container media-container--3-4">
-
-                            <img
-                                src="http://localhost:8888/wp-content/uploads/2026/09/product-3.jpg"
-                                alt="">
-
-                        </div>
-
-                    </a>
-
-                    <div class="shop-row-items__row-content">
-
-                        <h3 class="item-title">
-
-                            <strong>NAME</strong>
-
-                            <span>— OBJECT</span>
-
-                        </h3>
-
-                        <a href="#" class="button">
-                            DISCOVER
-                        </a>
-
-                    </div>
-
-                </div>
-
-                <!--END EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
-
-                <!--EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
-
-                <div class="shop-row-items__row-item">
-
-                    <a href="">
-
-                        <div class="media-container media-container--3-4">
-
-                            <img
-                                src="http://localhost:8888/wp-content/uploads/2026/09/product-4.jpg"
-                                alt="">
-
-                        </div>
-
-                    </a>
-
-                    <div class="shop-row-items__row-content">
-
-                        <h3 class="item-title">
-
-                            <strong>NAME</strong>
-
-                            <span>— OBJECT</span>
-
-                        </h3>
-
-                        <a href="#" class="button">
-                            DISCOVER
-                        </a>
-
-                    </div>
-
-                </div>
-
-                <!--END EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
-
-            </div>
-
-            <!--END EXPLORE OUR SHOP ROW ------------------------------------------------------------------------------------------------>
-
-        </section>
+<?php endif; ?>

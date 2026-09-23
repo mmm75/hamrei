@@ -2,8 +2,8 @@
   $(document).ready(function () {
     // Always start the page at the top on initial load
     window.scrollTo(0, 0);
-
     headerHomeScroll();
+    headerScroll();
     collectionGridSizeControls();
     collectionInfiniteScroll();
     aboutStudioSlider();
@@ -39,6 +39,32 @@
       if ($(window).scrollTop() >= headerTop) {
         $header.removeClass('absolute-header');
       }
+    });
+  }
+
+  function headerScroll() {
+    const scrollHeader = document.querySelector('#header');
+
+    if (!scrollHeader || scrollHeader.classList.contains('absolute-header')) {
+      return;
+    }
+
+    scrollHeader.classList.add('header-scroll');
+
+    let lastScrollTop = window.scrollY;
+
+    window.addEventListener('scroll', function () {
+      const scrollTop = window.scrollY;
+
+      if (scrollTop <= window.innerHeight * 0.5) {
+        scrollHeader.classList.remove('is-hidden');
+      } else if (scrollTop > lastScrollTop) {
+        scrollHeader.classList.add('is-hidden');
+      } else if (scrollTop < lastScrollTop) {
+        scrollHeader.classList.remove('is-hidden');
+      }
+
+      lastScrollTop = Math.max(scrollTop, 0);
     });
   }
 
@@ -226,9 +252,9 @@
   }
 
   function pieceSpecsAccordion() {
-    $('.piece-single__spec-title').on('click', function () {
-      const $spec = $(this).closest('.piece-single__spec');
-      const $content = $spec.find('.piece-single__spec-content');
+    $('.piece-product-single__spec-title').on('click', function () {
+      const $spec = $(this).closest('.piece-product-single__spec');
+      const $content = $spec.find('.piece-product-single__spec-content');
 
       $spec.toggleClass('is-opened');
       $content.stop(true, true).slideToggle(150);

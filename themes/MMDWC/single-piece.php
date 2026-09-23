@@ -4,151 +4,123 @@
 
         <!-- PIECE SINGLE ------------------------------------------------------------------------------------------------>
 
-        <section class="piece-single">
+        <section class="piece-product-single">
 
-            <div class="piece-single__gallery">
+            <div class="piece-product-single__gallery">
 
-                <div class="media-container">
+                <?php
+                $images = get_field('images');
+                $size = 'full';
+                if ($images): ?>
 
-                    <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1.jpg" alt="">
+                    <?php foreach ($images as $image_id): ?>
 
-                </div>
+                        <div class="media-container">
 
-                <div class="media-container">
+                            <?php echo wp_get_attachment_image($image_id, $size); ?>
 
-                    <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-2.jpg" alt="">
+                        </div>
 
-                </div>
+                    <?php endforeach; ?>
 
-                <div class="media-container">
-
-                    <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-3.jpg" alt="">
-
-                </div>
+                <?php endif; ?>
 
             </div>
 
-            <div class="piece-single__details">
+            <div class="piece-product-single__details">
 
-                <div class="piece-single__details-inner">
+                <div class="piece-product-single__details-inner">
 
-                    <div class="piece-single__intro">
+                    <div class="piece-product-single__intro">
 
-                        <h1 class="piece-single__title item-title">
+                        <h1 class="piece-product-single__title item-title">
 
-                            <strong>PEPE</strong>
-                            <span>CHAIR</span>
+                            <strong><?php the_field("title"); ?></strong>
+                            <span><?php the_field("sub-title"); ?></span>
 
                         </h1>
 
-                        <div class="piece-single__subtitle p--big">
+                        <div class="piece-product-single__subtitle p--big">
 
-                            Brass-finished dining chair with<br>
-                            FJ Hakimian upcycled woven leather
+                            <?php the_content(); ?>
 
                         </div>
 
-                        <div class="piece-single__description p--normal">
+                        <div class="piece-product-single__description p--normal">
 
-                            <p>The PePe chair in collaboration with FJ Hakimian makes use of their woven leather, made from weaving offcuts collected in factories to be rewoven. The result is a soft, textured backrest framed by a thick leather piping surround held in place bu the soft curves of the black steel frame. The comfortable seat is upholstered in FJ Hakimian organic cotton. Simple, subtle, chic. It is available in three sizes.</p>
-
-                            <p>S - Easy to place and fits well with any dining table (pictured with black backrest) M - Slightly more generous width. Perfect for spacious dining rooms and desks (pictured with light brown backrest)</p>
+                            <?php the_field("description"); ?>
 
                         </div>
 
                     </div>
 
 
-                    <div class="piece-single__specs">
+                    <div class="piece-product-single__specs">
 
-                        <!-- PIECE SPEC ITEM ------------------------------------------------------------------------------------------------>
+                        <!-- PIECE SPECS ------------------------------------------------------------------------------------------------>
 
-                        <div class="piece-single__spec">
+                        <?php get_template_part("/template-parts/piece/section-single-piece-specs"); ?>
 
-                            <div class="piece-single__spec-title">MATERIALS</div>
-
-                            <div class="piece-single__spec-content">
-
-                                <p>Brass-finished steel frame, FJ Hakimian woven leather backrest, organic cotton seat </p>
-
-                            </div>
-
-                        </div>
-
-                        <!-- END PIECE SPEC ITEM ------------------------------------------------------------------------------------------------>
-
-                        <!-- PIECE SPEC ITEM ------------------------------------------------------------------------------------------------>
-
-                        <div class="piece-single__spec">
-
-                            <div class="piece-single__spec-title">SIZES &amp; DIMENSIONS</div>
-
-                            <div class="piece-single__spec-content">
-
-                                <p>S - W38cm / 15in, D38cm / 15in, H46cm / 18.1in<br>
-                                    M - W46cm / 18.1in, D46cm / 18.1in, H46cm / 18.1in</p>
-
-                            </div>
-
-                        </div>
-
-                        <!-- END PIECE SPEC ITEM ------------------------------------------------------------------------------------------------>
-
-                        <!-- PIECE SPEC ITEM ------------------------------------------------------------------------------------------------>
-
-                        <div class="piece-single__spec">
-
-                            <div class="piece-single__spec-title">CUSTOMIZATION</div>
-
-                            <div class="piece-single__spec-content">
-
-                                <p>Shapes, sizes and fabrics available on request </p>
-
-                            </div>
-
-                        </div>
-
-                        <!-- END PIECE SPEC ITEM ------------------------------------------------------------------------------------------------>
-
-                        <!-- PIECE SPEC ITEM ------------------------------------------------------------------------------------------------>
-
-                        <div class="piece-single__spec">
-
-                            <div class="piece-single__spec-title">ORIGIN</div>
-
-                            <div class="piece-single__spec-content">
-
-                                <p>Handmade in Portugal; leather woven by FJ Hakimian </p>
-
-                            </div>
-
-                        </div>
-
-                        <!-- END PIECE SPEC ITEM ------------------------------------------------------------------------------------------------>
+                        <!-- END PIECE SPECS ------------------------------------------------------------------------------------------------>
 
                         <!-- PIECE SPEC FAMILY ------------------------------------------------------------------------------------------------>
 
-                        <div class="piece-single__spec">
+                        <?php $families = get_the_terms(get_the_ID(), 'family');
 
-                            <div class="piece-single__spec-title">FAMILY</div>
+                        if ($families && !is_wp_error($families)) : ?>
 
-                            <div class="piece-single__spec-content">
+                            <?php $family = reset($families);
 
-                                <?php get_template_part("/template-parts/piece/section-single-piece-family"); ?>
+                            $family_pieces = get_posts([
+                                'post_type'      => 'piece',
+                                'posts_per_page' => 1,
+                                'post_status'    => 'publish',
+                                'post__not_in'   => [get_the_ID()],
+                                'fields'         => 'ids',
+                                'tax_query'      => [
+                                    [
+                                        'taxonomy' => 'family',
+                                        'field'    => 'term_id',
+                                        'terms'    => $family->term_id,
+                                    ],
+                                ],
+                            ]); ?>
 
-                            </div>
+                            <?php if ($family_pieces) : ?>
 
-                        </div>
+                                <div class="piece-product-single__spec">
 
-                        <!-- PIECE SPEC FAMILY ------------------------------------------------------------------------------------------------>
+                                    <div class="piece-product-single__spec-title"><?php esc_html_e('family', 'mmdwc'); ?></div>
 
+                                    <div class="piece-product-single__spec-content">
+
+                                        <?php get_template_part("/template-parts/piece/section-single-piece-family"); ?>
+
+                                    </div>
+
+                                </div>
+
+                            <?php endif; ?>
+
+                        <?php endif; ?>
+
+                        <!-- END PIECE SPEC FAMILY ------------------------------------------------------------------------------------------------>
 
                     </div>
 
-                    <div class="piece-single__actions">
+                    <div class="piece-product-single__actions">
 
-                        <a href="#" class="button">REQUEST A QUOTATION</a>
-                        <a href="#" class="button">DOWNLOAD PRODUCT SHEET PDF</a>
+                        <?php
+                        $enquiry_subject = 'ENQUIRY-' . get_field('title') . '-' . get_field('sub-title');
+                        ?>
+
+                        <a href="mailto:info@hamrei.com?subject=<?php echo rawurlencode($enquiry_subject); ?>" class="custom-button"><?php esc_html_e('request a quotation', 'mmdwc'); ?></a>
+
+                        <?php if (get_field("product_pdf")): ?>
+
+                            <a href="<?php the_field("product_pdf"); ?>" download class="custom-button"><?php esc_html_e('download product sheet PDF', 'mmdwc'); ?></a>
+
+                        <?php endif; ?>
 
                     </div>
 

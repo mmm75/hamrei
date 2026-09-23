@@ -25,7 +25,7 @@ $hero_video_url = 'https://vz-809edc8b-256.b-cdn.net/' . $hero_video_id . '/play
     <div class="hero__time-container">
 
         <div class="hero__time"></div>
-        <div class="hero__location">at the studio</div>
+        <div class="hero__location"><?php esc_html_e('at the studio', 'mmdwc'); ?></div>
 
     </div>
 

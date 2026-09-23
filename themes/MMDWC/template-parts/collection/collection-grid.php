@@ -12,7 +12,7 @@ $pieces = $args['query'];
     <?php endif; ?>
 </h1>
 
-<div id="collection-grid" class="collection-grid collection-grid--2">
+<div id="collection-grid" class="collection-grid collection-grid--3">
 
     <?php while ($pieces->have_posts()) : $pieces->the_post(); ?>
 
@@ -34,9 +34,9 @@ $pieces = $args['query'];
 
             <h3 class="collection-grid__title item-title">
 
-                <strong><?php the_ID(); ?> — OSSO</strong>
+                <strong><?php the_field("title"); ?></strong>
 
-                <span>LAMP</span>
+                <span><?php the_field("sub-title"); ?></span>
 
             </h3>
 

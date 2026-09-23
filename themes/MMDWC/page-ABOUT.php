@@ -20,7 +20,7 @@ Template Name: TEMPLATE ABOUT
 
             <div class="section-header">
 
-                <h1>ABOUT US</h1>
+                <h1><?php the_title(); ?></h1>
 
             </div>
 

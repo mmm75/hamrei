@@ -2,13 +2,19 @@
 
 <footer id="footer" class="footer">
 
-    <img class="footer__claim" src="http://localhost:8888/wp-content/uploads/2026/09/footer-baseline-scaled.png" alt="HAMREI CLAIM">
+    <?php $tagline_footer = get_field('tagline_footer', 'option'); ?>
+
+    <?php if ($tagline_footer) : ?>
+
+        <?php echo wp_get_attachment_image($tagline_footer, 'full', false, ['class' => 'footer__claim']); ?>
+
+    <?php endif; ?>
 
     <div class="footer__content">
 
         <div class="footer__newsletter">
 
-            <h2>NEWSLETTER</h2>
+            <h2><?php esc_html_e('newsletter', 'mmdwc'); ?></h2>
 
             <div class="p--normal">
                 <p>
@@ -18,8 +24,8 @@
                 </p>
             </div>
 
-            <a href="#" class="button">
-                SIGN UP
+            <a href="#" class="custom-button">
+                <?php esc_html_e('sign up', 'mmdwc'); ?>
             </a>
 
         </div>
@@ -28,7 +34,7 @@
 
             <nav class="footer__column">
 
-                <h2>ABOUT</h2>
+                <h2><?php esc_html_e('about', 'mmdwc'); ?></h2>
 
                 <ul>
                     <li><a href="#">The Collection</a></li>
@@ -42,7 +48,7 @@
 
             <nav class="footer__column">
 
-                <h2>CONTACT</h2>
+                <h2><?php esc_html_e('contact', 'mmdwc'); ?></h2>
 
                 <ul>
                     <li><a href="#">Collection enquiries</a></li>
@@ -54,13 +60,32 @@
 
             <nav class="footer__column">
 
-                <h2>FOLLOW</h2>
+                <h2><?php esc_html_e('follow', 'mmdwc'); ?></h2>
 
-                <ul>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Pinterest</a></li>
-                </ul>
+                <?php if (have_rows('social', 'option')) : ?>
+
+                    <ul>
+
+                        <?php while (have_rows('social', 'option')) : the_row(); ?>
+
+                            <li>
+
+                                <a
+                                    href="<?php echo esc_url(get_sub_field('url')); ?>"
+                                    target="_blank"
+                                    rel="noopener noreferrer">
+
+                                    <?php echo esc_html(get_sub_field('name')); ?>
+
+                                </a>
+
+                            </li>
+
+                        <?php endwhile; ?>
+
+                    </ul>
+
+                <?php endif; ?>
 
             </nav>
 

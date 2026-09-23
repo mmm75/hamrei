@@ -20,7 +20,7 @@ Template Name: TEMPLATE CONTACT
 
             <div class="section-header">
 
-                <h1>CONTACT US</h1>
+                <h1><?php the_title(); ?></h1>
 
             </div>
 

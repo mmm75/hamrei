@@ -1,239 +1,93 @@
 <!-- FAMILY GRID ------------------------------------------------------------------------------------------------>
 
-<div class="family__grid">
+<?php
+$families = get_the_terms(get_the_ID(), 'family');
 
-    <!-- ITEM ------------------------------------------------------------------------------------------------>
+if ($families && !is_wp_error($families)) :
 
-    <div class="family__grid-item">
+    $family = reset($families);
 
-        <a href="#">
+    $family_pieces = new WP_Query([
+        'post_type'      => 'piece',
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'post__not_in'   => [get_the_ID()],
+        'orderby'        => 'menu_order',
+        'order'          => 'DESC',
+        'tax_query'      => [
+            [
+                'taxonomy' => 'family',
+                'field'    => 'term_id',
+                'terms'    => $family->term_id,
+            ],
+        ],
+    ]);
 
-            <div class="media-container media-container--3-4">
+    if ($family_pieces->have_posts()) :
+?>
 
-                <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1-scaled.jpg" alt="">
+        <div class="family__grid">
 
-            </div>
+            <?php while ($family_pieces->have_posts()) : $family_pieces->the_post(); ?>
 
-            <div class="family__grid-item--name background-lighting">
+                <?php
+                $piece_categories = get_the_terms(get_the_ID(), 'piece_category');
+                $parent_category = null;
 
-                <h3 class="item-title">
+                if ($piece_categories && !is_wp_error($piece_categories)) {
+                    foreach ($piece_categories as $piece_category) {
+                        if ($piece_category->parent) {
+                            $parent_category = get_term($piece_category->parent, 'piece_category');
+                            break;
+                        }
 
-                    <strong>OSSO</strong>
+                        $parent_category = $piece_category;
+                    }
+                }
+                ?>
 
-                    <span>LAMP</span>
+                <!-- ITEM ------------------------------------------------------------------------------------------------>
 
-                </h3>
-            </div>
+                <div class="family__grid-item">
 
-        </a>
+                    <a href="<?php the_permalink(); ?>">
 
-    </div>
+                        <div class="media-container media-container--3-4">
 
-    <!-- END ITEM ------------------------------------------------------------------------------------------------>
+                            <?php if (has_post_thumbnail()) : ?>
 
-    <!-- ITEM ------------------------------------------------------------------------------------------------>
+                                <?php the_post_thumbnail('full'); ?>
 
-    <div class="family__grid-item">
+                            <?php endif; ?>
 
-        <a href="#">
+                        </div>
 
-            <div class="media-container media-container--3-4">
+                        <div class="family__grid-item--name<?php echo $parent_category && !is_wp_error($parent_category) ? ' background-' . esc_attr($parent_category->slug) : ''; ?>">
 
-                <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1-scaled.jpg" alt="">
+                            <h3 class="item-title">
 
-            </div>
+                                <strong><?php the_title(); ?></strong>
 
-            <div class="family__grid-item--name background-tables">
+                            </h3>
 
-                <h3 class="item-title">
+                        </div>
 
-                    <strong>OSSO</strong>
+                    </a>
 
-                    <span>LAMP</span>
+                </div>
 
-                </h3>
-            </div>
+                <!-- END ITEM ------------------------------------------------------------------------------------------------>
 
-        </a>
+            <?php endwhile; ?>
 
-    </div>
+        </div>
 
-    <!-- END ITEM ------------------------------------------------------------------------------------------------>
+<?php
+    endif;
 
-    <!-- ITEM ------------------------------------------------------------------------------------------------>
+    wp_reset_postdata();
 
-    <div class="family__grid-item">
+endif;
+?>
 
-        <a href="#">
-
-            <div class="media-container media-container--3-4">
-
-                <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1-scaled.jpg" alt="">
-
-            </div>
-
-            <div class="family__grid-item--name background-seatings">
-
-                <h3 class="item-title">
-
-                    <strong>OSSO</strong>
-
-                    <span>LAMP</span>
-
-                </h3>
-            </div>
-
-        </a>
-
-    </div>
-
-    <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-    <!-- ITEM ------------------------------------------------------------------------------------------------>
-
-    <div class="family__grid-item">
-
-        <a href="#">
-
-            <div class="media-container media-container--3-4">
-
-                <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1-scaled.jpg" alt="">
-
-            </div>
-
-            <div class="family__grid-item--name background-storage">
-
-                <h3 class="item-title">
-
-                    <strong>OSSO</strong>
-
-                    <span>LAMP</span>
-
-                </h3>
-            </div>
-
-        </a>
-
-    </div>
-
-    <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-    <!-- ITEM ------------------------------------------------------------------------------------------------>
-
-    <div class="family__grid-item">
-
-        <a href="#">
-
-            <div class="media-container media-container--3-4">
-
-                <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1-scaled.jpg" alt="">
-
-            </div>
-
-            <div class="family__grid-item--name background-seatings">
-
-                <h3 class="item-title">
-
-                    <strong>OSSO</strong>
-
-                    <span>LAMP</span>
-
-                </h3>
-            </div>
-
-        </a>
-
-    </div>
-
-    <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-    <!-- ITEM ------------------------------------------------------------------------------------------------>
-
-    <div class="family__grid-item">
-
-        <a href="#">
-
-            <div class="media-container media-container--3-4">
-
-                <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1-scaled.jpg" alt="">
-
-            </div>
-
-            <div class="family__grid-item--name background-lighting">
-
-                <h3 class="item-title">
-
-                    <strong>OSSO</strong>
-
-                    <span>LAMP</span>
-
-                </h3>
-            </div>
-
-        </a>
-
-    </div>
-
-    <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-    <!-- ITEM ------------------------------------------------------------------------------------------------>
-
-    <div class="family__grid-item">
-
-        <a href="#">
-
-            <div class="media-container media-container--3-4">
-
-                <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1-scaled.jpg" alt="">
-
-            </div>
-
-            <div class="family__grid-item--name background-seatings">
-
-                <h3 class="item-title">
-
-                    <strong>OSSO</strong>
-
-                    <span>LAMP</span>
-
-                </h3>
-            </div>
-
-        </a>
-
-    </div>
-
-    <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-    <!-- ITEM ------------------------------------------------------------------------------------------------>
-
-    <div class="family__grid-item">
-
-        <a href="#">
-
-            <div class="media-container media-container--3-4">
-
-                <img src="http://localhost:8888/wp-content/uploads/2026/09/piece-1-scaled.jpg" alt="">
-
-            </div>
-
-            <div class="family__grid-item--name background-lighting">
-
-                <h3 class="item-title">
-
-                    <strong>OSSO</strong>
-
-                    <span>LAMP</span>
-
-                </h3>
-            </div>
-
-        </a>
-
-    </div>
-
-    <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-</div>
-
-<!-- END HIGHTLIGHTS GRID ------------------------------------------------------------------------------------------------>
+<!-- END FAMILY GRID ------------------------------------------------------------------------------------------------>

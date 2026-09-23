@@ -20,129 +20,95 @@ Template Name: TEMPLATE HOME
 
             <div class="section-header">
 
-                <h2>HIGHLIGHTS</h2>
+                <h2><?php esc_html_e('highlights', 'mmdwc'); ?></h2>
 
             </div>
 
             <!-- HIGHTLIGHTS ROW ------------------------------------------------------------------------------------------------>
 
-            <div class="highlights__row">
+            <?php
+            $highlights = get_field('highlights');
 
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
+            if ($highlights) :
+            ?>
 
-                <div class="highlights__row-item">
+                <div class="highlights__row">
 
-                    <div class="media-container media-container--3-4">
+                    <?php for ($i = 1; $i <= 3; $i++) :
 
-                        <video
-                            autoplay
-                            muted
-                            loop
-                            playsinline
-                            disablepictureinpicture
-                            webkit-playsinline
-                            preload="metadata">
-                            <source
-                                src="https://vz-809edc8b-256.b-cdn.net/23d6a690-db6b-420c-a9c5-058a19418956/play_720p.mp4"
-                                type="video/mp4">
-                        </video>
+                        $piece_id = $highlights['highlight_' . $i] ?? null;
+                        $video_id = $highlights['highlight_' . $i . '_video'] ?? null;
 
-                    </div>
+                        if (!$piece_id) {
+                            continue;
+                        }
 
-                    <div class="highlights__row-content">
+                        $title = get_field('title', $piece_id);
+                        $subtitle = get_field('sub-title', $piece_id);
+                    ?>
 
-                        <h3 class="item-title">
-                            <strong>OSSO</strong>
-                            <span>LAMP</span>
-                        </h3>
+                        <!-- ITEM ------------------------------------------------------------------------------------------------>
 
-                        <a href="#" class="button">
-                            DISCOVER
-                        </a>
+                        <div class="highlights__row-item">
 
-                    </div>
+                            <?php if ($video_id) : ?>
 
-                </div>
+                                <a href="<?php echo esc_url(get_permalink($piece_id)); ?>">
 
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
+                                    <div class="media-container media-container--3-4">
 
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
+                                        <video
+                                            autoplay
+                                            muted
+                                            loop
+                                            playsinline
+                                            disablepictureinpicture
+                                            webkit-playsinline
+                                            preload="metadata">
 
-                <div class="highlights__row-item">
+                                            <source
+                                                src="https://vz-809edc8b-256.b-cdn.net/<?php echo esc_attr($video_id); ?>/play_720p.mp4"
+                                                type="video/mp4">
 
-                    <div class="media-container media-container--3-4">
+                                        </video>
 
-                        <video
-                            autoplay
-                            muted
-                            loop
-                            playsinline
-                            disablepictureinpicture
-                            webkit-playsinline
-                            preload="metadata">
-                            <source
-                                src="https://vz-809edc8b-256.b-cdn.net/23d6a690-db6b-420c-a9c5-058a19418956/play_720p.mp4"
-                                type="video/mp4">
-                        </video>
+                                    </div>
 
-                    </div>
+                                </a>
 
-                    <div class="highlights__row-content">
+                            <?php endif; ?>
 
-                        <h3 class="item-title">
-                            <strong>XX</strong>
-                            <span>LAMP</span>
-                        </h3>
+                            <div class="highlights__row-content">
 
-                        <a href="#" class="button">
-                            DISCOVER
-                        </a>
+                                <h3 class="item-title">
 
-                    </div>
+                                    <strong><?php echo esc_html($title); ?></strong>
 
-                </div>
+                                    <?php if ($subtitle) : ?>
 
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
+                                        <span><?php echo esc_html($subtitle); ?></span>
 
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
+                                    <?php endif; ?>
 
-                <div class="highlights__row-item">
+                                </h3>
 
-                    <div class="media-container media-container--3-4">
+                                <a href="<?php echo esc_url(get_permalink($piece_id)); ?>" class="custom-button">
 
-                        <video
-                            autoplay
-                            muted
-                            loop
-                            playsinline
-                            disablepictureinpicture
-                            webkit-playsinline
-                            preload="metadata">
-                            <source
-                                src="https://vz-809edc8b-256.b-cdn.net/23d6a690-db6b-420c-a9c5-058a19418956/play_720p.mp4"
-                                type="video/mp4">
-                        </video>
+                                    <?php esc_html_e('discover', 'mmdwc'); ?>
 
-                    </div>
+                                </a>
 
-                    <div class="highlights__row-content">
+                            </div>
 
-                        <h3 class="item-title">
-                            <strong>FUN GUY</strong>
-                            <span>TABLE</span>
-                        </h3>
+                        </div>
 
-                        <a href="#" class="button">
-                            DISCOVER
-                        </a>
+                        <!-- END ITEM ------------------------------------------------------------------------------------------------>
 
-                    </div>
+                    <?php endfor; ?>
 
                 </div>
 
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-            </div>
+            <?php endif; ?>
 
             <!-- END HIGHTLIGHTS ROW ------------------------------------------------------------------------------------------------>
 
@@ -222,7 +188,11 @@ Template Name: TEMPLATE HOME
 
             <div class="section-header">
 
-                <h2>ABOUT US</h2>
+                <?php
+                $about_page_id = apply_filters('wpml_object_id', 18, 'page', true);
+                ?>
+
+                <h2><?php echo esc_html(get_the_title($about_page_id)); ?></h2>
 
             </div>
 
@@ -252,17 +222,21 @@ Template Name: TEMPLATE HOME
 
         <!-- PRE FOOTER SECTION ------------------------------------------------------------------------------------------------>
 
-        <section id="home-pre-footer" class="home__pre-footer">
+        <?php $image_footer = get_field('image_footer'); ?>
 
-            <div class="media-container media-container--9-4">
+        <?php if ($image_footer) : ?>
 
-                <img
-                    src="http://localhost:8888/wp-content/uploads/2026/09/pre-footer-scaled.jpg"
-                    alt="">
+            <section id="home-pre-footer" class="home__pre-footer">
 
-            </div>
+                <div class="media-container media-container--9-4">
 
-        </section>
+                    <?php echo wp_get_attachment_image($image_footer, 'full'); ?>
+
+                </div>
+
+            </section>
+
+        <?php endif; ?>
 
         <!-- END PRE FOOTER SECTION ------------------------------------------------------------------------------------------------>
 

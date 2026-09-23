@@ -20,6 +20,5 @@ function theme_setup()
 
 	add_theme_support('menus');
 
-	// WooCommerce
-	// add_theme_support('woocommerce');
+	add_theme_support('woocommerce');
 }

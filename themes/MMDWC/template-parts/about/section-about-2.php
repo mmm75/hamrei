@@ -1,70 +1,90 @@
-<div class="about__section-2">
+<?php $about_us_2 = get_field('about_us_2', 18); ?>
 
-    <div class="about__section-2-left">
+<?php if ($about_us_2) : ?>
 
+    <div class="about__section-2">
 
-        <div class="p--big">
+        <div class="about__section-2-left">
 
-            <p>Based in Marvila, Lisbon's art district, HAMREI's creative studio doubles up as an appointment-only showroom.</p>
+            <?php if ($about_us_2['text_1']) : ?>
+
+                <div class="p--big">
+
+                    <?php echo $about_us_2['text_1']; ?>
+
+                </div>
+
+            <?php endif; ?>
+
+            <?php if ($about_us_2['text_2']) : ?>
+
+                <div class="p--normal">
+
+                    <?php echo $about_us_2['text_2']; ?>
+
+                </div>
+
+            <?php endif; ?>
+
+            <?php if ($about_us_2['link']) : ?>
+
+                <a
+                    href="<?php echo esc_url($about_us_2['link']['url']); ?>"
+                    class="custom-button"
+                    <?php echo $about_us_2['link']['target'] ? 'target="' . esc_attr($about_us_2['link']['target']) . '"' : ''; ?>>
+
+                    <?php echo $about_us_2['link']['title']; ?>
+
+                </a>
+
+            <?php endif; ?>
 
         </div>
 
-        <div class="p--normal">
+        <div class="about__section-2-right">
 
-            <p>Transformed from its days as a nightclub, it is a place where ideas, people, and creativity naturally blend. Within its walls, HAMREI's own design and art pieces coexist with a selection from his personal collection, each piece a glimpse into his evolving creative world. An industrial setting for enduring beauty. Contact us to find out more about using the Studio for private events, dinners, and photoshoots.</p>
+            <?php if ($about_us_2['images']) : ?>
 
-        </div>
+                <div class="swiper about__section-2-slider">
 
-        <a href="#" class="button">
-            Contact<br>us
-        </a>
+                    <div class="swiper-wrapper">
 
-    </div>
+                        <?php foreach ($about_us_2['images'] as $image_id) : ?>
 
-    <div class="about__section-2-right">
+                            <!-- SLIDE ------------------------------------------------------------------------------------------------>
 
-        <div class="swiper about__section-2-slider">
+                            <div class="swiper-slide">
 
-            <div class="swiper-wrapper">
+                                <div class="media-container media-container--3-2">
 
-                <!-- SLIDE ------------------------------------------------------------------------------------------------>
+                                    <?php echo wp_get_attachment_image($image_id, 'full'); ?>
 
-                <div class="swiper-slide">
+                                </div>
 
-                    <div class="media-container media-container--3-2">
+                            </div>
 
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/studio-photos.jpg" alt="">
+                            <!-- END SLIDE ------------------------------------------------------------------------------------------------>
+
+                        <?php endforeach; ?>
 
                     </div>
 
                 </div>
 
-                <!-- END SLIDE ------------------------------------------------------------------------------------------------>
+            <?php endif; ?>
 
-                <!-- SLIDE ------------------------------------------------------------------------------------------------>
+            <?php if ($about_us_2['title']) : ?>
 
-                <div class="swiper-slide">
+                <div class="vertical-label about__section-2-studio-label">
 
-                    <div class="media-container media-container--3-2">
-
-                        <img src="http://localhost:8888/wp-content/uploads/2026/09/studio-photos-2.png" alt="">
-
-                    </div>
+                    <?php echo esc_html($about_us_2['title']); ?>
 
                 </div>
 
-                <!-- END SLIDE ------------------------------------------------------------------------------------------------>
-
-            </div>
-
-        </div>
-
-        <div class="vertical-label about__section-2-studio-label">
-
-            THE STUDIO
+            <?php endif; ?>
 
         </div>
 
     </div>
 
-</div>
+<?php endif; ?>
