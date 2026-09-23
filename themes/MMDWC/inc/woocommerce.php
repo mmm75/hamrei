@@ -41,14 +41,3 @@ function hamrei_get_product_navigation()
 		'next'     => get_permalink($product_ids[$next_index]),
 	];
 }
-
-//////////////////////////////////////////////////////////////
-// DISABLE PRODUCT QUANTITY SELECTION
-//////////////////////////////////////////////////////////////
-
-add_filter('woocommerce_is_sold_individually', 'hamrei_products_sold_individually', 10, 2);
-
-function hamrei_products_sold_individually($sold_individually, $product)
-{
-	return true;
-}

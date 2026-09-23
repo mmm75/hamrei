@@ -209,3 +209,22 @@ function theme_load_hero_videos()
 		]
 	);
 }
+
+//////////////////////////////////////////////////////////////
+// WOOCOMMERCE CUSTOM JS
+//////////////////////////////////////////////////////////////
+
+add_action('wp_enqueue_scripts', 'theme_load_woocommerce_custom', 30);
+
+function theme_load_woocommerce_custom()
+{
+	$woocommerce_custom_js_path = get_template_directory() . '/assets/js/woocommerce-custom.js';
+
+	wp_enqueue_script(
+		'woocommerce-custom',
+		get_template_directory_uri() . '/assets/js/woocommerce-custom.js',
+		array('jquery'),
+		file_exists($woocommerce_custom_js_path) ? filemtime($woocommerce_custom_js_path) : null,
+		true
+	);
+}
