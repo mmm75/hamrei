@@ -1,4 +1,4 @@
-<?php $about_us_1 = get_field('about_us_1', 18); ?>
+<?php $about_us_1 = get_field('about_us_1', apply_filters('wpml_object_id', 18, 'page', true)); ?>
 
 <?php if ($about_us_1) : ?>
 

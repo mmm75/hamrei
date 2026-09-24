@@ -19,6 +19,24 @@ function theme_load_reset_css()
 }
 
 //////////////////////////////////////////////////////////////
+// WOOCOMMERCE CUSTOM CSS
+//////////////////////////////////////////////////////////////
+
+add_action('wp_enqueue_scripts', 'theme_load_woocommerce_custom_css', 31);
+
+function theme_load_woocommerce_custom_css()
+{
+	$woocommerce_custom_css_path = get_template_directory() . '/assets/css/woocommerce-custom.css';
+
+	wp_enqueue_style(
+		'woocommerce-custom',
+		get_template_directory_uri() . '/assets/css/woocommerce-custom.css',
+		array('theme-style'),
+		file_exists($woocommerce_custom_css_path) ? filemtime($woocommerce_custom_css_path) : null
+	);
+}
+
+//////////////////////////////////////////////////////////////
 // ADOBE FONTS
 //////////////////////////////////////////////////////////////
 

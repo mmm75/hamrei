@@ -16,7 +16,8 @@
 
 	<?php wp_body_open(); ?>
 
-	<header id="header" <?php if (is_page_template(['page-HOME.php', 'page-ABOUT.php', 'page-CONTACT.php'])) : ?> class="absolute-header" <?php endif; ?>>
+	<!-- <header id="header" < ?php if (is_page_template(['page-HOME.php', 'page-ABOUT.php', 'page-CONTACT.php'])) : ?> class="absolute-header" < ?php endif; ?>> -->
+	<header id="header" <?php if (is_page_template(['page-HOME.php'])) : ?> class="absolute-header" <?php endif; ?>>
 
 		<!-- HEADER MAIN ------------------------------------------------------------------------------------------------>
 
@@ -57,19 +58,23 @@
 
 			</nav>
 
-			<div class="header__cart">
+			<?php if (function_exists('WC') && WC()->cart && !WC()->cart->is_empty()) : ?>
 
-				<a
-					href="<?php echo esc_url(wc_get_cart_url()); ?>"
-					class="header__cart-link">
+				<div class="header__cart">
 
-					<img
-						src="<?php echo get_template_directory_uri(); ?>/assets/img/cart.svg"
-						alt="<?php esc_attr_e('cart', 'mmdwc'); ?>">
+					<a
+						href="<?php echo esc_url(wc_get_cart_url()); ?>"
+						class="header__cart-link">
 
-				</a>
+						<img
+							src="<?php echo get_template_directory_uri(); ?>/assets/img/cart.svg"
+							alt="<?php esc_attr_e('cart', 'mmdwc'); ?>">
 
-			</div>
+					</a>
+
+				</div>
+
+			<?php endif; ?>
 
 		</div>
 

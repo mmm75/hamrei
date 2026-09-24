@@ -10,7 +10,7 @@ Template Name: TEMPLATE CONTACT
 
         <!-- HERO SECTION ------------------------------------------------------------------------------------------------>
 
-        <?php get_template_part("/template-parts/section-hero"); ?>
+        <!-- < ?php get_template_part("/template-parts/section-hero"); ?> -->
 
         <!-- END HERO SECTION ------------------------------------------------------------------------------------------------>
 
@@ -24,41 +24,25 @@ Template Name: TEMPLATE CONTACT
 
             </div>
 
-            <!-- CONTACT ITEM ------------------------------------------------------------------------------------------------>
+            <?php if (have_rows('contacts')) : ?>
 
-            <div class="contact-item">
+                <?php while (have_rows('contacts')) : the_row(); ?>
 
-                <h3>Prices and Product Sheets</h3>
+                    <!-- CONTACT ITEM ------------------------------------------------------------------------------------------------>
 
-                <a href="#">info@hamrei.com</a>
+                    <div class="contact-item">
 
-            </div>
+                        <h3><?php the_sub_field('text'); ?></h3>
 
-            <!-- END CONTACT ITEM ------------------------------------------------------------------------------------------------>
+                        <a href="mailto:<?php the_sub_field('e-mail'); ?>"><?php the_sub_field('e-mail'); ?></a>
 
-            <!-- CONTACT ITEM ------------------------------------------------------------------------------------------------>
+                    </div>
 
-            <div class="contact-item">
+                    <!-- END CONTACT ITEM ------------------------------------------------------------------------------------------------>
 
-                <h3>Professionnal Enquiries</h3>
+                <?php endwhile; ?>
 
-                <a href="#">pro@hamrei.com</a>
-
-            </div>
-
-            <!-- END CONTACT ITEM ------------------------------------------------------------------------------------------------>
-
-            <!-- CONTACT ITEM ------------------------------------------------------------------------------------------------>
-
-            <div class="contact-item">
-
-                <h3>Press and Digital</h3>
-
-                <a href="#">as@hamrei.com</a>
-
-            </div>
-
-            <!-- END CONTACT ITEM ------------------------------------------------------------------------------------------------>
+            <?php endif; ?>
 
         </section>
 

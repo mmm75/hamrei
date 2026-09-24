@@ -10,7 +10,7 @@ Template Name: TEMPLATE ABOUT
 
         <!-- HERO SECTION ------------------------------------------------------------------------------------------------>
 
-        <?php get_template_part("/template-parts/section-hero"); ?>
+        <!-- < ?php get_template_part("/template-parts/section-hero"); ?> -->
 
         <!-- END HERO SECTION ------------------------------------------------------------------------------------------------>
 

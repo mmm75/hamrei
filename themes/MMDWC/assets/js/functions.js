@@ -9,6 +9,8 @@
     aboutStudioSlider();
     pieceSpecsAccordion();
     pieceGoBack();
+    projectVideos();
+    projectCarousels();
   });
 
   function headerHomeScroll() {
@@ -258,6 +260,45 @@
 
       $spec.toggleClass('is-opened');
       $content.stop(true, true).slideToggle(150);
+    });
+  }
+
+  function projectVideos() {
+    $('.project-item__play').on('click', function () {
+      const $button = $(this);
+      const video = $button.siblings('video').get(0);
+
+      $('.project-item__media video').each(function () {
+        if (this !== video) {
+          this.pause();
+          this.currentTime = 0;
+        }
+      });
+
+      video.controls = true;
+      $button.remove();
+      video.play();
+    });
+  }
+  function projectCarousels() {
+    $('.project-item__carousel').each(function () {
+      new Swiper(this, {
+        slidesPerView: 2.25,
+        slidesPerGroup: 1,
+        centeredSlides: false,
+        spaceBetween: 0,
+        mousewheel: false,
+        grabCursor: true,
+        loop: true,
+        breakpoints: {
+          0: {
+            slidesPerView: 1.25,
+          },
+          991: {
+            slidesPerView: 2.25,
+          },
+        },
+      });
     });
   }
 })(jQuery);

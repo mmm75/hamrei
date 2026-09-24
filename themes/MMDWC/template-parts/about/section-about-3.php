@@ -1,6 +1,6 @@
 <?php
-$about_us_3_left = get_field('about_us_3_left', 18);
-$about_us_3_right = get_field('about_us_3_right', 18);
+$about_us_3_left = get_field('about_us_3_left', apply_filters('wpml_object_id', 18, 'page', true));
+$about_us_3_right = get_field('about_us_3_right', apply_filters('wpml_object_id', 18, 'page', true));
 ?>
 
 <?php if ($about_us_3_left || $about_us_3_right) : ?>
@@ -9,13 +9,23 @@ $about_us_3_right = get_field('about_us_3_right', 18);
 
         <div class="about__section-3-left">
 
+            <?php if ($about_us_3_left['image_1']) : ?>
+
+                <div class="floating-image media-container media-container--2-3">
+
+                    <?php echo wp_get_attachment_image($about_us_3_left['image_1'], 'full'); ?>
+
+                </div>
+
+            <?php endif; ?>
+
             <div class="about__section-3-main-image">
 
-                <?php if ($about_us_3_left['image']) : ?>
+                <?php if ($about_us_3_left['image_2']) : ?>
 
                     <div class="media-container media-container--2-3">
 
-                        <?php echo wp_get_attachment_image($about_us_3_left['image'], 'full'); ?>
+                        <?php echo wp_get_attachment_image($about_us_3_left['image_2'], 'full'); ?>
 
                     </div>
 

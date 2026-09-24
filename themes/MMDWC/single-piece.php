@@ -37,6 +37,9 @@
 
                             <strong><?php the_field("title"); ?></strong>
                             <span><?php the_field("sub-title"); ?></span>
+                            <?php if (get_field("sub-title_2")): ?>
+                                <span class="sub-title-2"><?php the_field("sub-title_2"); ?></span>
+                            <?php endif; ?>
 
                         </h1>
 

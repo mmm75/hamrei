@@ -50,11 +50,29 @@
 
                 <h2><?php esc_html_e('contact', 'mmdwc'); ?></h2>
 
-                <ul>
-                    <li><a href="#">Collection enquiries</a></li>
-                    <li><a href="#">DAM Lisbon</a></li>
-                    <li><a href="#">Press</a></li>
-                </ul>
+                <?php $contacts_page_id = apply_filters('wpml_object_id', 20, 'page', true); ?>
+
+                <?php if (have_rows('contacts', $contacts_page_id)) : ?>
+
+                    <ul>
+
+                        <?php while (have_rows('contacts', $contacts_page_id)) : the_row(); ?>
+
+                            <!-- CONTACT ITEM ------------------------------------------------------------------------------------------------>
+
+                            <li>
+
+                                <a href="mailto:<?php the_sub_field('e-mail'); ?>"><?php the_sub_field('text'); ?></a>
+
+                            </li>
+
+                            <!-- END CONTACT ITEM ------------------------------------------------------------------------------------------------>
+
+                        <?php endwhile; ?>
+
+                    </ul>
+
+                <?php endif; ?>
 
             </nav>
 
