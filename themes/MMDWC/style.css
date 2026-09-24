@@ -95,6 +95,10 @@ body {
   color: #000;
 }
 
+.otgs-development-site-front-end {
+  display: none!important;
+}
+
 *:focus,
 *:focus-visible,
 *:active {
@@ -488,6 +492,53 @@ header .current_page_parent a:after,
   width: 25%;
   padding-right: 35px;
 }
+
+.header__languages a {
+  color:black!important;
+  opacity: 1!important;
+}
+
+.header__languages a:after {
+  display: none!important;
+}
+
+.header__languages .wpml-ls-current-language a {
+  font-weight: 600;
+}
+
+.header__languages .wpml-ls-legacy-list-horizontal {
+  border: 0px solid transparent;
+  padding: 0px;
+  clear: both;
+}
+
+.header__languages .wpml-ls-legacy-list-horizontal a {
+  display: block;
+  text-decoration: none;
+  padding: 0px;
+  line-height: unset;
+}
+
+.header__languages .wpml-ls-legacy-list-horizontal ul {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.header__languages .wpml-ls-item {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.header__languages .wpml-ls-item + .wpml-ls-item::before {
+  content: '-';
+  display: block;
+  margin: 0 8px;
+  line-height: 1;
+}
+
+
 
 #header.absolute-header {
   position: absolute;

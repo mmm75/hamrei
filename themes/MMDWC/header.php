@@ -52,7 +52,7 @@
 
 				<div class="header__languages">
 
-					PT - EN
+					<?php do_action('wpml_add_language_selector'); ?>
 
 				</div>
 
