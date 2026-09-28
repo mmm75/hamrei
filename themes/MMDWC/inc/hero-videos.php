@@ -7,16 +7,14 @@
 function hamrei_get_hero_video_slots()
 {
     return [
-        ['start' => '00:00', 'field' => 'video_0000_0600'],
         ['start' => '06:00', 'field' => 'video_06_0745'],
         ['start' => '07:45', 'field' => 'video_0745_0930'],
         ['start' => '09:30', 'field' => 'video_0930_1115'],
-        ['start' => '11:15', 'field' => 'video_1115_1300'],
-        ['start' => '13:00', 'field' => 'video_1300_1445'],
+        ['start' => '11:15', 'field' => 'video_1115_1445'],
         ['start' => '14:45', 'field' => 'video_1445_1630'],
         ['start' => '16:30', 'field' => 'video_1630_1815'],
         ['start' => '18:15', 'field' => 'video_1815_2000'],
-        ['start' => '20:00', 'field' => 'video_2000_0000'],
+        ['start' => '20:00', 'field' => 'video_2000_0600'],
     ];
 }
 
@@ -29,7 +27,7 @@ function hamrei_get_current_hero_video_slot_index()
     $slots = hamrei_get_hero_video_slots();
     $now = new DateTime('now', new DateTimeZone('Europe/Lisbon'));
     $time = $now->format('H:i');
-    $current_index = 0;
+    $current_index = count($slots) - 1;
 
     foreach ($slots as $index => $slot) {
         if ($time >= $slot['start']) {
@@ -119,6 +117,6 @@ function hamrei_get_next_hero_video_ajax()
     }
 
     wp_send_json_success([
-        'url' => 'https://vz-809edc8b-256.b-cdn.net/' . $video_id . '/play_720p.mp4',
+        'url' => 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $video_id . '/play_720p.mp4',
     ]);
 }

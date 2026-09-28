@@ -116,55 +116,61 @@ if (count($related_piece_ids) < 4) {
 
         <!-- YOU MAY ALSO LIKE ROW ------------------------------------------------------------------------------------------------>
 
-        <div class="shop-row-items__row">
+        <div class="swiper shop-row-items__row">
 
-            <?php foreach ($related_piece_ids as $piece_id) : ?>
+            <div class="swiper-wrapper">
 
-                <!-- YOU MAY ALSO LIKE ITEM ------------------------------------------------------------------------------------------------>
+                <?php foreach ($related_piece_ids as $piece_id) : ?>
 
-                <div class="shop-row-items__row-item">
+                    <!-- YOU MAY ALSO LIKE ITEM ------------------------------------------------------------------------------------------------>
 
-                    <a href="<?php echo esc_url(get_permalink($piece_id)); ?>">
+                    <div class="swiper-slide shop-row-items__row-item">
 
-                        <div class="media-container media-container--3-4">
+                        <a href="<?php echo esc_url(get_permalink($piece_id)); ?>">
 
-                            <?php if (has_post_thumbnail($piece_id)) : ?>
+                            <div class="media-container media-container--3-4">
 
-                                <?php echo get_the_post_thumbnail($piece_id, 'full'); ?>
+                                <?php if (has_post_thumbnail($piece_id)) : ?>
 
-                            <?php endif; ?>
+                                    <?php echo get_the_post_thumbnail($piece_id, 'image_thumb_product'); ?>
 
-                        </div>
+                                <?php endif; ?>
 
-                    </a>
-
-                    <div class="shop-row-items__row-content">
-
-                        <h3 class="item-title">
-
-                            <strong><?php echo esc_html(get_field('title', $piece_id)); ?></strong>
-
-                            <?php if (get_field('sub-title', $piece_id)) : ?>
-
-                                <span><?php echo esc_html(get_field('sub-title', $piece_id)); ?></span>
-
-                            <?php endif; ?>
-
-                        </h3>
-
-                        <a href="<?php echo esc_url(get_permalink($piece_id)); ?>" class="custom-button">
-
-                            <?php esc_html_e('discover', 'mmdwc'); ?>
+                            </div>
 
                         </a>
 
+                        <div class="shop-row-items__row-content">
+
+                            <h3 class="item-title">
+
+                                <strong><?php echo esc_html(get_field('title', $piece_id)); ?></strong>
+
+                                <?php if (get_field('sub-title', $piece_id)) : ?>
+
+                                    <span><?php echo esc_html(get_field('sub-title', $piece_id)); ?></span>
+
+                                <?php endif; ?>
+
+                            </h3>
+
+                            <a href="<?php echo esc_url(get_permalink($piece_id)); ?>" class="custom-button">
+
+                                <?php esc_html_e('discover', 'mmdwc'); ?>
+
+                            </a>
+
+                        </div>
+
                     </div>
 
-                </div>
+                    <!-- END YOU MAY ALSO LIKE ITEM ------------------------------------------------------------------------------------------------>
 
-                <!-- END YOU MAY ALSO LIKE ITEM ------------------------------------------------------------------------------------------------>
+                <?php endforeach; ?>
 
-            <?php endforeach; ?>
+            </div>
+
+            <div class="swiper-pagination carousel-pagination shop-row-items__pagination"></div>
 
         </div>
 

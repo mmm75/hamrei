@@ -32,79 +32,85 @@ Template Name: TEMPLATE HOME
             if ($highlights) :
             ?>
 
-                <div class="highlights__row">
+                <div class="swiper highlights__row">
 
-                    <?php for ($i = 1; $i <= 3; $i++) :
+                    <div class="swiper-wrapper">
 
-                        $piece_id = $highlights['highlight_' . $i] ?? null;
-                        $video_id = $highlights['highlight_' . $i . '_video'] ?? null;
+                        <?php for ($i = 1; $i <= 3; $i++) :
 
-                        if (!$piece_id) {
-                            continue;
-                        }
+                            $piece_id = $highlights['highlight_' . $i] ?? null;
+                            $video_id = $highlights['highlight_' . $i . '_video'] ?? null;
 
-                        $title = get_field('title', $piece_id);
-                        $subtitle = get_field('sub-title', $piece_id);
-                    ?>
+                            if (!$piece_id) {
+                                continue;
+                            }
 
-                        <!-- ITEM ------------------------------------------------------------------------------------------------>
+                            $title = get_field('title', $piece_id);
+                            $subtitle = get_field('sub-title', $piece_id);
+                        ?>
 
-                        <div class="highlights__row-item">
+                            <!-- ITEM ------------------------------------------------------------------------------------------------>
 
-                            <?php if ($video_id) : ?>
+                            <div class="swiper-slide highlights__row-item">
 
-                                <a href="<?php echo esc_url(get_permalink($piece_id)); ?>">
+                                <?php if ($video_id) : ?>
 
-                                    <div class="media-container media-container--3-4">
+                                    <a href="<?php echo esc_url(get_permalink($piece_id)); ?>">
 
-                                        <video
-                                            autoplay
-                                            muted
-                                            loop
-                                            playsinline
-                                            disablepictureinpicture
-                                            webkit-playsinline
-                                            preload="metadata">
+                                        <div class="media-container media-container--3-4">
 
-                                            <source
-                                                src="https://vz-809edc8b-256.b-cdn.net/<?php echo esc_attr($video_id); ?>/play_720p.mp4"
-                                                type="video/mp4">
+                                            <video
+                                                autoplay
+                                                muted
+                                                loop
+                                                playsinline
+                                                disablepictureinpicture
+                                                webkit-playsinline
+                                                preload="metadata">
 
-                                        </video>
+                                                <source
+                                                    src="https://vz-eb7b1f3f-f93.b-cdn.net/<?php echo esc_attr($video_id); ?>/play_720p.mp4"
+                                                    type="video/mp4">
 
-                                    </div>
+                                            </video>
 
-                                </a>
+                                        </div>
 
-                            <?php endif; ?>
+                                    </a>
 
-                            <div class="highlights__row-content">
+                                <?php endif; ?>
 
-                                <h3 class="item-title">
+                                <div class="highlights__row-content">
 
-                                    <strong><?php echo esc_html($title); ?></strong>
+                                    <h3 class="item-title">
 
-                                    <?php if ($subtitle) : ?>
+                                        <strong><?php echo esc_html($title); ?></strong>
 
-                                        <span><?php echo esc_html($subtitle); ?></span>
+                                        <?php if ($subtitle) : ?>
 
-                                    <?php endif; ?>
+                                            <span><?php echo esc_html($subtitle); ?></span>
 
-                                </h3>
+                                        <?php endif; ?>
 
-                                <a href="<?php echo esc_url(get_permalink($piece_id)); ?>" class="custom-button">
+                                    </h3>
 
-                                    <?php esc_html_e('discover', 'mmdwc'); ?>
+                                    <a href="<?php echo esc_url(get_permalink($piece_id)); ?>" class="custom-button">
 
-                                </a>
+                                        <?php esc_html_e('discover', 'mmdwc'); ?>
+
+                                    </a>
+
+                                </div>
 
                             </div>
 
-                        </div>
+                            <!-- END ITEM ------------------------------------------------------------------------------------------------>
 
-                        <!-- END ITEM ------------------------------------------------------------------------------------------------>
+                        <?php endfor; ?>
 
-                    <?php endfor; ?>
+                    </div>
+
+                    <div class="swiper-pagination carousel-pagination highlights__pagination"></div>
 
                 </div>
 
@@ -147,7 +153,7 @@ Template Name: TEMPLATE HOME
 
                                     <div class="media-container media-container--square">
 
-                                        <?php echo wp_get_attachment_image($featured_image, 'full'); ?>
+                                        <?php echo wp_get_attachment_image($featured_image, 'image_square'); ?>
 
                                     </div>
 
@@ -226,11 +232,11 @@ Template Name: TEMPLATE HOME
 
         <?php if ($image_footer) : ?>
 
-            <section id="home-pre-footer" class="home__pre-footer">
+            <section id="home-pre-footer" class="home__pre-footer desktop">
 
                 <div class="media-container media-container--9-4">
 
-                    <?php echo wp_get_attachment_image($image_footer, 'full'); ?>
+                    <?php echo wp_get_attachment_image($image_footer, 'large'); ?>
 
                 </div>
 

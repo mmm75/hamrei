@@ -45,11 +45,17 @@
                     $link = get_field('link');
                     $file = get_field('file');
                     $left_column = get_field('left_column');
-                    $video_id = get_field('video_url');
+                    $video = get_field('video');
                     $carousel = get_field('carousel');
 
+                    $video_id = !empty($video['video_id']) ? $video['video_id'] : '';
+                    $video_thumbnail = !empty($video['video_thumbnail']) ? $video['video_thumbnail'] : '';
+                    $video_thumbnail_url = $video_thumbnail
+                        ? wp_get_attachment_image_url($video_thumbnail, 'large')
+                        : '';
+
                     $video_url = $video_id
-                        ? 'https://vz-809edc8b-256.b-cdn.net/' . $video_id . '/play_720p.mp4'
+                        ? 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $video_id . '/play_720p.mp4'
                         : '';
 
                     $has_left_column = !empty($left_column['title']) || !empty($left_column['text']);
@@ -88,7 +94,7 @@
 
                                                         <div class="media-container project-item__carousel-media">
 
-                                                            <?php echo wp_get_attachment_image($image_id, 'full'); ?>
+                                                            <?php echo wp_get_attachment_image($image_id, 'large_medium'); ?>
 
                                                         </div>
 
@@ -106,13 +112,16 @@
 
                                         <!-- PROJECT ITEM VIDEO ------------------------------------------------------------------------------------------------>
 
-                                        <div class="media-container media-container--16-9">
+                                        <div class="media-container media-container--16-9 video-container">
 
                                             <video
                                                 playsinline
                                                 disablepictureinpicture
                                                 webkit-playsinline
-                                                preload="metadata">
+                                                preload="metadata"
+                                                <?php if ($video_thumbnail_url) : ?>
+                                                poster="<?php echo esc_url($video_thumbnail_url); ?>"
+                                                <?php endif; ?>>
 
                                                 <source
                                                     src="<?php echo esc_url($video_url); ?>"
@@ -129,14 +138,13 @@
                                         </div>
 
                                         <!-- END PROJECT ITEM VIDEO ------------------------------------------------------------------------------------------------>
-
                                     <?php else : ?>
 
                                         <!-- PROJECT ITEM THUMBNAIL ------------------------------------------------------------------------------------------------>
 
                                         <div class="media-container media-container--16-9">
 
-                                            <?php the_post_thumbnail('full'); ?>
+                                            <?php the_post_thumbnail('large'); ?>
 
                                         </div>
 
@@ -154,7 +162,7 @@
 
                             <div class="project-item__header">
 
-                                <div class="project-item__date">
+                                <div class="title-date project-item__date">
 
                                     <?php echo esc_html(get_the_date('F j, Y')); ?>
 
@@ -208,11 +216,11 @@
 
                                 <!-- PROJECT ITEM LEFT COLUMN ------------------------------------------------------------------------------------------------>
 
-                                <div class="project-item__left-column">
+                                <div class="left-column project-item__left-column">
 
                                     <?php if (!empty($left_column['title'])) : ?>
 
-                                        <h3 class="item-title project-item__left-column-title">
+                                        <h3 class="left-column-title item-title project-item__left-column-title">
 
                                             <?php echo esc_html($left_column['title']); ?>
 
@@ -222,7 +230,7 @@
 
                                     <?php if (!empty($left_column['text'])) : ?>
 
-                                        <div class="project-item__left-column-text p--normal">
+                                        <div class="left-column-text project-item__left-column-text p--normal">
 
                                             <?php echo wp_kses_post($left_column['text']); ?>
 
@@ -236,7 +244,7 @@
 
                                 <!-- PROJECT ITEM RIGHT COLUMN ------------------------------------------------------------------------------------------------>
 
-                                <div class="project-item__right-column">
+                                <div class="right-column project-item__right-column">
 
                                     <?php if (get_the_content()) : ?>
 
@@ -310,7 +318,7 @@
 
                                     <div class="media-container media-container--square">
 
-                                        <?php the_post_thumbnail('full'); ?>
+                                        <?php the_post_thumbnail('image_square'); ?>
 
                                     </div>
 
@@ -326,7 +334,7 @@
 
                                 <div class="project-item__content-inner">
 
-                                    <div class="project-item__date">
+                                    <div class="title-date project-item__date">
 
                                         <?php echo esc_html(get_the_date('F j, Y')); ?>
 

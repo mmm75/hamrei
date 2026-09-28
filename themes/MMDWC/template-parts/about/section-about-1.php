@@ -10,7 +10,7 @@
 
                 <div class="media-container media-container--square">
 
-                    <?php echo wp_get_attachment_image($about_us_1['image'], 'full'); ?>
+                    <?php echo wp_get_attachment_image($about_us_1['image'], 'image_square'); ?>
 
                 </div>
 

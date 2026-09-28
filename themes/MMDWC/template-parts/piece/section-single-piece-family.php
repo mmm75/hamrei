@@ -56,7 +56,7 @@ if ($families && !is_wp_error($families)) :
 
                             <?php if (has_post_thumbnail()) : ?>
 
-                                <?php the_post_thumbnail('full'); ?>
+                                <?php the_post_thumbnail('image_thumb_product'); ?>
 
                             <?php endif; ?>
 

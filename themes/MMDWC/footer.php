@@ -6,7 +6,7 @@
 
     <?php if ($tagline_footer) : ?>
 
-        <?php echo wp_get_attachment_image($tagline_footer, 'full', false, ['class' => 'footer__claim']); ?>
+        <?php echo wp_get_attachment_image($tagline_footer, 'large', false, ['class' => 'footer__claim desktop']); ?>
 
     <?php endif; ?>
 

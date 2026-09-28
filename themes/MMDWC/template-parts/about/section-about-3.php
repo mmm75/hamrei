@@ -13,7 +13,7 @@ $about_us_3_right = get_field('about_us_3_right', apply_filters('wpml_object_id'
 
                 <div class="floating-image media-container media-container--2-3">
 
-                    <?php echo wp_get_attachment_image($about_us_3_left['image_1'], 'full'); ?>
+                    <?php echo wp_get_attachment_image($about_us_3_left['image_1'], 'large_medium'); ?>
 
                 </div>
 
@@ -25,7 +25,7 @@ $about_us_3_right = get_field('about_us_3_right', apply_filters('wpml_object_id'
 
                     <div class="media-container media-container--2-3">
 
-                        <?php echo wp_get_attachment_image($about_us_3_left['image_2'], 'full'); ?>
+                        <?php echo wp_get_attachment_image($about_us_3_left['image_2'], 'large_medium'); ?>
 
                     </div>
 
@@ -77,7 +77,7 @@ $about_us_3_right = get_field('about_us_3_right', apply_filters('wpml_object_id'
 
                     <div class="media-container media-container--3-2">
 
-                        <?php echo wp_get_attachment_image($about_us_3_right['image_1'], 'full'); ?>
+                        <?php echo wp_get_attachment_image($about_us_3_right['image_1'], 'large_medium'); ?>
 
                     </div>
 
@@ -125,7 +125,7 @@ $about_us_3_right = get_field('about_us_3_right', apply_filters('wpml_object_id'
 
                     <div class="media-container media-container--square">
 
-                        <?php echo wp_get_attachment_image($about_us_3_right['image_2'], 'full'); ?>
+                        <?php echo wp_get_attachment_image($about_us_3_right['image_2'], 'image_square'); ?>
 
                     </div>
 

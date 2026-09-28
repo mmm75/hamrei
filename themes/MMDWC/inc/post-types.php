@@ -189,3 +189,49 @@ function hamrei_register_piece_family_taxonomy()
 		'query_var'         => false,
 	]);
 }
+
+//////////////////////////////////////////////////////////////
+// FILMS CUSTOM POST TYPE
+//////////////////////////////////////////////////////////////
+
+add_action('init', 'hamrei_register_films_post_type');
+
+//////////////////////////////////////////////////////////////
+// REGISTER FILMS CUSTOM POST TYPE
+//////////////////////////////////////////////////////////////
+
+function hamrei_register_films_post_type()
+{
+	register_post_type('film', [
+		'labels' => [
+			'name'               => 'Films',
+			'singular_name'      => 'Film',
+			'menu_name'          => 'Films',
+			'add_new'            => 'Add New',
+			'add_new_item'       => 'Add New Film',
+			'edit_item'          => 'Edit Film',
+			'new_item'           => 'New Film',
+			'view_item'          => 'View Film',
+			'search_items'       => 'Search Films',
+			'not_found'          => 'No films found',
+			'not_found_in_trash' => 'No films found in Trash',
+			'all_items'          => 'All Films',
+		],
+
+		'public' => true,
+		'has_archive' => 'films',
+		'rewrite' => [
+			'slug'       => 'films',
+			'with_front' => false,
+		],
+		'show_in_rest' => true,
+
+		'supports' => [
+			'title',
+			'editor',
+			'thumbnail',
+		],
+
+		'menu_icon' => 'dashicons-video-alt3',
+	]);
+}

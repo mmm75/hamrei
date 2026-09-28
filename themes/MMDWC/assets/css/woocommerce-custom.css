@@ -420,7 +420,7 @@
   width: 22px;
   height: 22px;
   margin: 0px 0 0 0px;
-  background-image: url('assets/img/HAMREI_LOGO_SMALL.svg') !important;
+  background-image: url('../img/HAMREI_LOGO_SMALL.svg') !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   background-size: contain !important;
@@ -436,4 +436,99 @@
 
 .woocommerce-NoticeGroup.woocommerce-NoticeGroup-checkout {
   display: none;
+}
+
+/* THANK YOU PAGE */
+
+#main .woocommerce-order {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 30px;
+}
+
+#main .woocommerce .woocommerce-customer-details .addresses:last-child {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 30px;
+}
+
+#main .woocommerce .col2-set::after,
+#main .woocommerce .col2-set::before,
+#main .woocommerce-page .col2-set::after,
+#main .woocommerce-page .col2-set::before {
+  display: none;
+}
+
+#main .woocommerce .col2-set .col-1,
+#main .woocommerce-page .col2-set .col-1,
+#main .woocommerce .col2-set .col-2,
+#main .woocommerce-page .col2-set .col-2 {
+  float: none;
+  width: 100%;
+}
+
+#main .woocommerce-thankyou-order-received {
+  grid-column: 1 / -1;
+}
+
+#main .woocommerce-order-details,
+#main .woocommerce-customer-details {
+  min-width: 0;
+}
+
+#main .woocommerce-order h2 {
+  font-size: 28px;
+  line-height: 71%;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+#main .woocommerce .woocommerce-customer-details address {
+  border: 1px solid black;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+  border-radius: 0px;
+  padding: 10px 12px;
+  line-height: 141%;
+}
+
+#main .woocommerce-thankyou-order-received {
+  font-weight: 100;
+  font-size: 48px;
+  line-height: 89%;
+  margin-bottom: 60px;
+  margin-top: 30px;
+}
+
+#main
+  .woocommerce
+  .woocommerce-customer-details
+  .woocommerce-customer-details--email::before {
+  line-height: 141%;
+  font-size: 16px;
+}
+
+@media (max-width: 991px) {
+  .piece-product__price {
+    font-size: 20px;
+    line-height: 100%;
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+
+  #products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0;
+    gap: 30px 0px;
+  }
+
+  .product-grid__content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .single-product .piece-product-single {
+    padding: 50px 15px;
+  }
 }

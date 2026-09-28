@@ -18,7 +18,7 @@ $products = $args['query'] ?? $GLOBALS['wp_query'];
 
                     <div class="media-container media-container--3-4">
 
-                        <?php the_post_thumbnail('full'); ?>
+                        <?php the_post_thumbnail('image_thumb_product'); ?>
 
                     </div>
 
@@ -36,9 +36,11 @@ $products = $args['query'] ?? $GLOBALS['wp_query'];
 
                 </h2>
 
+                <!-- DESKTOP ------------------------------------------------------------------------------------------------>
+
                 <?php if (get_the_content()) : ?>
 
-                    <div class="product-grid__description p--small">
+                    <div class="product-grid__description p--small desktop">
 
                         <?php the_content(); ?>
 
@@ -46,15 +48,19 @@ $products = $args['query'] ?? $GLOBALS['wp_query'];
 
                 <?php endif; ?>
 
+                <!-- END DESKTOP ------------------------------------------------------------------------------------------------>
+
                 <div class="piece-product__price">
 
                     <?php echo $product->get_price_html(); ?>
 
                 </div>
 
+                <!-- DESKTOP ------------------------------------------------------------------------------------------------>
+
                 <?php if ($product->is_purchasable() && $product->is_in_stock()) : ?>
 
-                    <form class="product-grid__cart" action="<?php echo esc_url($product->get_permalink()); ?>" method="post">
+                    <form class="product-grid__cart desktop" action="<?php echo esc_url($product->get_permalink()); ?>" method="post">
 
                         <button
                             type="submit"
@@ -69,6 +75,8 @@ $products = $args['query'] ?? $GLOBALS['wp_query'];
                     </form>
 
                 <?php endif; ?>
+
+                <!-- END DESKTOP ------------------------------------------------------------------------------------------------>
 
             </div>
 

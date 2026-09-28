@@ -57,7 +57,7 @@
 
                                 <div class="media-container media-container--3-2">
 
-                                    <?php echo wp_get_attachment_image($image_id, 'full'); ?>
+                                    <?php echo wp_get_attachment_image($image_id, 'large_medium'); ?>
 
                                 </div>
 

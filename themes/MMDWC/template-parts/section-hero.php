@@ -1,6 +1,6 @@
 <?php
 $hero_video_id = hamrei_get_current_hero_video_id();
-$hero_video_url = 'https://vz-809edc8b-256.b-cdn.net/' . $hero_video_id . '/play_720p.mp4';
+$hero_video_url = 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $hero_video_id . '/play_720p.mp4';
 ?>
 
 <section id="hero" class="hero">
@@ -28,5 +28,21 @@ $hero_video_url = 'https://vz-809edc8b-256.b-cdn.net/' . $hero_video_id . '/play
         <div class="hero__location"><?php esc_html_e('at the studio', 'mmdwc'); ?></div>
 
     </div>
+
+    <!-- COMING SOON -->
+
+    <div class="hero__coming-soon">
+        <h3 class="item-title">
+
+            <strong>New Website</strong>
+
+            <span>Coming Soon</span>
+
+        </h3>
+
+    </div>
+
+    <!-- COMING SOON -->
+
 
 </section>

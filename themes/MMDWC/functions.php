@@ -39,3 +39,73 @@ function hamrei_register_options_page()
         'redirect' => false,
     ]);
 }
+
+//////////////////////////////////////////////////////////////
+// COMING SOON MODE
+//////////////////////////////////////////////////////////////
+
+// add_action('template_redirect', 'hamrei_coming_soon_mode');
+
+//////////////////////////////////////////////////////////////
+// REDIRECT PUBLIC VISITORS TO COMING SOON PAGE
+//////////////////////////////////////////////////////////////
+
+function hamrei_coming_soon_mode()
+{
+    $preview_key = 'hamrei-preview-2026';
+
+    if (
+        isset($_GET['preview']) &&
+        hash_equals($preview_key, sanitize_text_field($_GET['preview']))
+    ) {
+        setcookie(
+            'hamrei_preview',
+            '1',
+            [
+                'expires'  => time() + WEEK_IN_SECONDS,
+                'path'     => COOKIEPATH ?: '/',
+                'secure'   => is_ssl(),
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]
+        );
+
+        wp_safe_redirect(remove_query_arg('preview'));
+        exit;
+    }
+
+    if (is_user_logged_in()) {
+        return;
+    }
+
+    if (!empty($_COOKIE['hamrei_preview']) && $_COOKIE['hamrei_preview'] === '1') {
+        return;
+    }
+
+    if (is_admin()) {
+        return;
+    }
+
+    if (wp_doing_ajax()) {
+        return;
+    }
+
+    if (wp_doing_cron()) {
+        return;
+    }
+
+    if (defined('REST_REQUEST') && REST_REQUEST) {
+        return;
+    }
+
+    if (isset($_GET['wc-api']) || isset($_GET['wc-ajax'])) {
+        return;
+    }
+
+    if (is_page('coming-soon')) {
+        return;
+    }
+
+    wp_safe_redirect(home_url('/coming-soon/'));
+    exit;
+}

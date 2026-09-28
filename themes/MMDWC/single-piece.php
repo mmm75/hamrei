@@ -6,11 +6,19 @@
 
         <section class="piece-product-single">
 
-            <div class="piece-product-single__gallery">
+            <!-- DESKTOP ------------------------------------------------------------------------------------------------>
+
+            <div class="piece-product-single__gallery desktop">
+
+                <div class="media-container">
+
+                    <?php the_post_thumbnail('large_medium'); ?>
+
+                </div>
 
                 <?php
                 $images = get_field('images');
-                $size = 'full';
+                $size = 'large_medium';
                 if ($images): ?>
 
                     <?php foreach ($images as $image_id): ?>
@@ -26,6 +34,22 @@
                 <?php endif; ?>
 
             </div>
+
+            <!-- END DESKTOP ------------------------------------------------------------------------------------------------>
+
+            <!-- MOBILE ------------------------------------------------------------------------------------------------>
+
+            <div class="piece-product-single__thumbnail mobile">
+
+                <div class="media-container">
+
+                    <?php the_post_thumbnail('large_medium'); ?>
+
+                </div>
+
+            </div>
+
+            <!-- MOBILE ------------------------------------------------------------------------------------------------>
 
             <div class="piece-product-single__details">
 
@@ -114,7 +138,12 @@
                     <div class="piece-product-single__actions">
 
                         <?php
-                        $enquiry_subject = 'ENQUIRY-' . get_field('title') . '-' . get_field('sub-title');
+                        $enquiry_subject = implode('-', array_filter([
+                            'ENQUIRY',
+                            get_field('title'),
+                            get_field('sub-title'),
+                            get_field('sub-title_2'),
+                        ]));
                         ?>
 
                         <a href="mailto:info@hamrei.com?subject=<?php echo rawurlencode($enquiry_subject); ?>" class="custom-button"><?php esc_html_e('request a quotation', 'mmdwc'); ?></a>
@@ -127,9 +156,32 @@
 
                     </div>
 
-                </div>
+                    <!-- MOBILE ------------------------------------------------------------------------------------------------>
 
-            </div>
+                    <div class="piece-product-single__gallery mobile">
+
+                        <?php
+                        $images = get_field('images');
+                        $size = 'large_medium';
+                        if ($images): ?>
+
+                            <?php foreach ($images as $image_id): ?>
+
+                                <div class="media-container">
+
+                                    <?php echo wp_get_attachment_image($image_id, $size); ?>
+
+                                </div>
+
+                            <?php endforeach; ?>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                    <!-- END MOBILE ------------------------------------------------------------------------------------------------>
+
+                </div>
 
         </section>
 

@@ -151,7 +151,7 @@
   function getHeroVideoSlot() {
     // Get the current Lisbon time in 24-hour format for slot comparisons
     const time = heroSlotFormatter.format(new Date());
-    let currentSlot = hamreiHero.schedule[0].slot;
+    let currentSlot = hamreiHero.schedule[hamreiHero.schedule.length - 1].slot;
 
     // Find the current slot using the schedule defined in PHP
     for (const slot of hamreiHero.schedule) {

@@ -12,47 +12,53 @@
 
         <!-- EXPLORE OUR SHOP ROW ------------------------------------------------------------------------------------------------>
 
-        <div class="shop-row-items__row">
+        <div class="swiper shop-row-items__row">
 
-            <?php foreach ($products as $product_id) : ?>
+            <div class="swiper-wrapper">
 
-                <!-- EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
+                <?php foreach ($products as $product_id) : ?>
 
-                <div class="shop-row-items__row-item">
+                    <!-- EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
 
-                    <a href="<?php echo esc_url(get_permalink($product_id)); ?>">
+                    <div class="swiper-slide shop-row-items__row-item">
 
-                        <div class="media-container media-container--3-4">
+                        <a href="<?php echo esc_url(get_permalink($product_id)); ?>">
 
-                            <?php echo get_the_post_thumbnail($product_id, 'full'); ?>
+                            <div class="media-container media-container--3-4">
 
-                        </div>
+                                <?php echo get_the_post_thumbnail($product_id, 'image_thumb_product'); ?>
 
-                    </a>
-
-                    <div class="shop-row-items__row-content">
-
-                        <h3 class="item-title">
-
-                            <strong><?php echo get_field('title', $product_id); ?></strong>
-
-                            <span>— <?php echo get_field('sub-title', $product_id); ?></span>
-
-                        </h3>
-
-                        <a href="<?php echo esc_url(get_permalink($product_id)); ?>" class="custom-button">
-
-                            <?php esc_html_e('discover', 'mmdwc'); ?>
+                            </div>
 
                         </a>
 
+                        <div class="shop-row-items__row-content">
+
+                            <h3 class="item-title">
+
+                                <strong><?php echo get_field('title', $product_id); ?></strong>
+
+                                <span>— <?php echo get_field('sub-title', $product_id); ?></span>
+
+                            </h3>
+
+                            <a href="<?php echo esc_url(get_permalink($product_id)); ?>" class="custom-button">
+
+                                <?php esc_html_e('discover', 'mmdwc'); ?>
+
+                            </a>
+
+                        </div>
+
                     </div>
 
-                </div>
+                    <!-- END EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
 
-                <!-- END EXPLORE OUR SHOP ITEM ------------------------------------------------------------------------------------------------>
+                <?php endforeach; ?>
 
-            <?php endforeach; ?>
+            </div>
+
+            <div class="swiper-pagination carousel-pagination shop-row-items__pagination"></div>
 
         </div>
 

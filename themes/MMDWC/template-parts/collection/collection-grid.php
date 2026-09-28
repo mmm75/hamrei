@@ -24,7 +24,7 @@ $pieces = $args['query'];
 
                     <div class="media-container media-container--square">
 
-                        <?php the_post_thumbnail('full'); ?>
+                        <?php the_post_thumbnail('image_square'); ?>
 
                     </div>
 
