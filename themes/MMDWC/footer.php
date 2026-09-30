@@ -10,6 +10,14 @@
 
     <?php endif; ?>
 
+    <div class="footer__logo mobile">
+
+        <img
+            src="<?php echo get_template_directory_uri(); ?>/assets/img/HAMREI_LOGO_BIG.png"
+            alt="HAMREI">
+
+    </div>
+
     <div class="footer__content">
 
         <div class="footer__newsletter">
@@ -36,13 +44,13 @@
 
                 <h2><?php esc_html_e('about', 'mmdwc'); ?></h2>
 
-                <ul>
-                    <li><a href="#">The Collection</a></li>
-                    <li><a href="#">Studio</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Story</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                </ul>
+                <?php
+                wp_nav_menu([
+                    'menu'       => 'Menu Footer',
+                    'container'  => false,
+                    'menu_class' => '',
+                ]);
+                ?>
 
             </nav>
 
@@ -111,7 +119,7 @@
 
     </div>
 
-    <div class="footer__logo">
+    <div class="footer__logo desktop">
 
         <img
             src="<?php echo get_template_directory_uri(); ?>/assets/img/HAMREI_LOGO_BIG.png"

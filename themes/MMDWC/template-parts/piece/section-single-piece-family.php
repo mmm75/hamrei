@@ -1,6 +1,7 @@
 <!-- FAMILY GRID ------------------------------------------------------------------------------------------------>
 
 <?php
+
 $families = get_the_terms(get_the_ID(), 'family');
 
 if ($families && !is_wp_error($families)) :
@@ -23,71 +24,87 @@ if ($families && !is_wp_error($families)) :
         ],
     ]);
 
-    if ($family_pieces->have_posts()) :
-?>
+    if ($family_pieces->have_posts()) : ?>
 
-        <div class="family__grid">
+        <div class="piece-product-single__spec">
 
-            <?php while ($family_pieces->have_posts()) : $family_pieces->the_post(); ?>
+            <div class="piece-product-single__spec-title">
+                <?php esc_html_e('family', 'mmdwc'); ?>
+            </div>
 
-                <?php
-                $piece_categories = get_the_terms(get_the_ID(), 'piece_category');
-                $parent_category = null;
+            <div class="piece-product-single__spec-content">
 
-                if ($piece_categories && !is_wp_error($piece_categories)) {
-                    foreach ($piece_categories as $piece_category) {
-                        if ($piece_category->parent) {
-                            $parent_category = get_term($piece_category->parent, 'piece_category');
-                            break;
+                <div class="family__grid">
+
+                    <?php while ($family_pieces->have_posts()) : $family_pieces->the_post(); ?>
+
+                        <?php
+
+                        $piece_categories = get_the_terms(get_the_ID(), 'piece_category');
+                        $parent_category = null;
+
+                        if ($piece_categories && !is_wp_error($piece_categories)) {
+
+                            foreach ($piece_categories as $piece_category) {
+
+                                if ($piece_category->parent) {
+
+                                    $parent_category = get_term(
+                                        $piece_category->parent,
+                                        'piece_category'
+                                    );
+
+                                    break;
+                                }
+
+                                $parent_category = $piece_category;
+                            }
                         }
 
-                        $parent_category = $piece_category;
-                    }
-                }
-                ?>
+                        ?>
 
-                <!-- ITEM ------------------------------------------------------------------------------------------------>
+                        <div class="family__grid-item">
 
-                <div class="family__grid-item">
+                            <a href="<?php the_permalink(); ?>">
 
-                    <a href="<?php the_permalink(); ?>">
+                                <div class="media-container media-container--3-4">
 
-                        <div class="media-container media-container--3-4">
+                                    <?php if (has_post_thumbnail()) : ?>
 
-                            <?php if (has_post_thumbnail()) : ?>
+                                        <?php the_post_thumbnail('image_thumb_product'); ?>
 
-                                <?php the_post_thumbnail('image_thumb_product'); ?>
+                                    <?php endif; ?>
 
-                            <?php endif; ?>
+                                </div>
+
+                                <div class="family__grid-item--name<?php echo $parent_category && !is_wp_error($parent_category) ? ' background-' . esc_attr($parent_category->slug) : ''; ?>">
+
+                                    <h3 class="item-title">
+
+                                        <strong><?php the_title(); ?></strong>
+
+                                    </h3>
+
+                                </div>
+
+                            </a>
 
                         </div>
 
-                        <div class="family__grid-item--name<?php echo $parent_category && !is_wp_error($parent_category) ? ' background-' . esc_attr($parent_category->slug) : ''; ?>">
-
-                            <h3 class="item-title">
-
-                                <strong><?php the_title(); ?></strong>
-
-                            </h3>
-
-                        </div>
-
-                    </a>
+                    <?php endwhile; ?>
 
                 </div>
 
-                <!-- END ITEM ------------------------------------------------------------------------------------------------>
-
-            <?php endwhile; ?>
+            </div>
 
         </div>
 
-<?php
-    endif;
+<?php endif;
 
     wp_reset_postdata();
 
 endif;
+
 ?>
 
 <!-- END FAMILY GRID ------------------------------------------------------------------------------------------------>

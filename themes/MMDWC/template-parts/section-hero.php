@@ -38,7 +38,14 @@ $hero_video_url = 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $hero_video_id . '/play
 
             <span>Coming Soon</span>
 
+
         </h3>
+
+        <div class="p--big">
+
+            <p><a href="mailto:info@hamrei.com">info@hamrei.com</a></p>
+
+        </div>
 
     </div>
 

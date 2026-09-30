@@ -21,19 +21,13 @@
 
             <div class="header__menu">
 
-                <?php
-                wp_nav_menu([
-                    'menu'       => 'Menu Header',
-                    'container'  => false,
-                    'menu_class' => 'header__menu-list',
-                ]);
-                ?>
+                <?php echo hamrei_get_header_menu_html('header__menu-list'); ?>
 
             </div>
 
             <div class="header__languages">
 
-                <?php do_action('wpml_add_language_selector'); ?>
+                <?php echo hamrei_get_language_selector_html(); ?>
 
             </div>
 
@@ -162,13 +156,7 @@
             <ul class="collection-nav__categories">
 
                 <?php
-                $piece_categories = get_terms([
-                    'taxonomy'   => 'piece_category',
-                    'parent'     => 0,
-                    'hide_empty' => false,
-                    'orderby'    => 'term_order',
-                    'order'      => 'ASC',
-                ]);
+                $piece_categories = hamrei_get_piece_parent_categories();
 
                 if (!is_wp_error($piece_categories)) :
 
@@ -230,13 +218,7 @@
                 $parent_category = $current_category;
             }
 
-            $child_categories = get_terms([
-                'taxonomy'   => 'piece_category',
-                'parent'     => $parent_category->term_id,
-                'hide_empty' => false,
-                'orderby'    => 'term_order',
-                'order'      => 'ASC',
-            ]);
+            $child_categories = hamrei_get_piece_category_children($parent_category->term_id);
             ?>
 
             <?php if (!is_wp_error($child_categories) && !empty($child_categories)) : ?>

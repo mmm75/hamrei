@@ -20,6 +20,52 @@ function theme_menu_link_attributes($atts, $menu_item, $args, $depth)
 }
 
 //////////////////////////////////////////////////////////////
+// WPML LANGUAGE SELECTOR
+//////////////////////////////////////////////////////////////
+
+function hamrei_get_language_selector_html()
+{
+    static $html = null;
+
+    if ($html !== null) {
+        return $html;
+    }
+
+    ob_start();
+
+    do_action('wpml_add_language_selector');
+
+    $html = ob_get_clean();
+
+    return $html;
+}
+
+//////////////////////////////////////////////////////////////
+// HEADER MENU
+//////////////////////////////////////////////////////////////
+
+function hamrei_get_header_menu_html($menu_class)
+{
+    static $html = null;
+
+    if ($html === null) {
+
+        $html = wp_nav_menu([
+            'menu'       => 'Menu Header',
+            'container'  => false,
+            'menu_class' => 'HAMREI_HEADER_MENU_CLASS',
+            'echo'       => false,
+        ]);
+    }
+
+    return str_replace(
+        'HAMREI_HEADER_MENU_CLASS',
+        esc_attr($menu_class),
+        $html
+    );
+}
+
+//////////////////////////////////////////////////////////////
 // ACF OPTIONS PAGE
 //////////////////////////////////////////////////////////////
 
@@ -27,7 +73,7 @@ add_action('acf/init', 'hamrei_register_options_page');
 
 function hamrei_register_options_page()
 {
-    if (!function_exists('acf_add_options_page')) {
+    if (!is_admin() || !function_exists('acf_add_options_page')) {
         return;
     }
 

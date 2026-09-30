@@ -14,6 +14,7 @@
     highlightsCarousel();
     shopRowItemsCarousel();
     headerMobile();
+    headerMobileHomeScroll();
   });
 
   function headerHomeScroll() {
@@ -397,7 +398,9 @@
     }
 
     $menuToggle.on('click', function () {
+      filtersOpen = false;
       menuOpen = !menuOpen;
+
       updateHeader();
     });
 
@@ -430,5 +433,36 @@
 
     updateHeader();
     updateGrid();
+  }
+
+  function headerMobileHomeScroll() {
+    const $header = $('#header-mobile');
+    const $hero = $('.hero');
+
+    if (
+      !$header.length ||
+      !$hero.length ||
+      !$('body').hasClass('page-template-page-HOME')
+    ) {
+      return;
+    }
+
+    let heroBottom = $hero.offset().top + $hero.outerHeight();
+
+    function updateHeader() {
+      const scrollTop = window.scrollY;
+      const isPastHero = scrollTop >= heroBottom;
+
+      $header.toggleClass('is-home-visible', isPastHero);
+    }
+
+    $(window).on('scroll', updateHeader);
+
+    $(window).on('resize', function () {
+      heroBottom = $hero.offset().top + $hero.outerHeight();
+      updateHeader();
+    });
+
+    updateHeader();
   }
 })(jQuery);

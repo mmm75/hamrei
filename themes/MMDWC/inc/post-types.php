@@ -79,6 +79,54 @@ function hamrei_register_taxonomies()
 }
 
 //////////////////////////////////////////////////////////////
+// GET PIECE PARENT CATEGORIES
+//////////////////////////////////////////////////////////////
+
+function hamrei_get_piece_parent_categories()
+{
+	static $categories = null;
+
+	if ($categories !== null) {
+		return $categories;
+	}
+
+	$categories = get_terms([
+		'taxonomy'   => 'piece_category',
+		'parent'     => 0,
+		'hide_empty' => false,
+		'orderby'    => 'term_order',
+		'order'      => 'ASC',
+	]);
+
+	return $categories;
+}
+
+//////////////////////////////////////////////////////////////
+// GET PIECE CATEGORY CHILDREN
+//////////////////////////////////////////////////////////////
+
+function hamrei_get_piece_category_children($parent_id)
+{
+	static $cache = [];
+
+	$parent_id = (int) $parent_id;
+
+	if (isset($cache[$parent_id])) {
+		return $cache[$parent_id];
+	}
+
+	$cache[$parent_id] = get_terms([
+		'taxonomy'   => 'piece_category',
+		'parent'     => $parent_id,
+		'hide_empty' => false,
+		'orderby'    => 'term_order',
+		'order'      => 'ASC',
+	]);
+
+	return $cache[$parent_id];
+}
+
+//////////////////////////////////////////////////////////////
 // PIECES ARCHIVE POSTS PER PAGE
 //////////////////////////////////////////////////////////////
 
@@ -95,17 +143,19 @@ function hamrei_pieces_archive_posts_per_page($query)
 // PIECE CATEGORY REWRITE RULES
 //////////////////////////////////////////////////////////////
 
-add_action('init', 'hamrei_piece_category_rewrite_rules', 20);
+add_filter('rewrite_rules_array', 'hamrei_piece_category_rewrite_rules');
 
-function hamrei_piece_category_rewrite_rules()
+function hamrei_piece_category_rewrite_rules($rules)
 {
+	$custom_rules = [];
+
 	$terms = get_terms([
 		'taxonomy'   => 'piece_category',
 		'hide_empty' => false,
 	]);
 
 	if (is_wp_error($terms)) {
-		return;
+		return $rules;
 	}
 
 	foreach ($terms as $term) {
@@ -113,23 +163,35 @@ function hamrei_piece_category_rewrite_rules()
 		$term_path = $term->slug;
 
 		if ($term->parent) {
-			$ancestors = array_reverse(get_ancestors($term->term_id, 'piece_category'));
+
+			$ancestor_slugs = [];
+
+			$ancestors = array_reverse(
+				get_ancestors(
+					$term->term_id,
+					'piece_category',
+					'taxonomy'
+				)
+			);
 
 			foreach ($ancestors as $ancestor_id) {
+
 				$ancestor = get_term($ancestor_id, 'piece_category');
 
 				if (!is_wp_error($ancestor)) {
-					$term_path = $ancestor->slug . '/' . $term_path;
+					$ancestor_slugs[] = $ancestor->slug;
 				}
+			}
+
+			if (!empty($ancestor_slugs)) {
+				$term_path = implode('/', $ancestor_slugs) . '/' . $term->slug;
 			}
 		}
 
-		add_rewrite_rule(
-			'^collection/' . $term_path . '/?$',
-			'index.php?piece_category=' . $term->slug,
-			'top'
-		);
+		$custom_rules['^collection/' . $term_path . '/?$'] = 'index.php?piece_category=' . $term->slug;
 	}
+
+	return $custom_rules + $rules;
 }
 
 //////////////////////////////////////////////////////////////

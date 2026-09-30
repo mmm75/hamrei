@@ -510,11 +510,11 @@
 }
 
 @media (max-width: 991px) {
-  .piece-product__price {
-    font-size: 20px;
-    line-height: 100%;
-    font-style: italic;
-    margin-bottom: 30px;
+  /* WOOCOMMERCE */
+
+  .post-type-archive-product #main,
+  .single-product #main {
+    padding-top: 150px;
   }
 
   #products-grid {
@@ -529,6 +529,38 @@
   }
 
   .single-product .piece-product-single {
-    padding: 50px 15px;
+    padding: 15px 15px;
+  }
+
+  .piece-product-single__details {
+    position: unset;
+    padding: 15px 0px 0px 0px;
+  }
+
+  .single-product .piece-product-single__details-inner {
+    margin-bottom: 15px;
+  }
+
+  .single-product .piece-product__price {
+    font-size: 20px;
+    line-height: 100%;
+    font-style: italic;
+    margin-bottom: 15px;
+  }
+
+  .single-product .piece-product-single__purchase {
+    margin-bottom: 15px;
+  }
+
+  .single-product .piece-product-single__gallery {
+    width: 100%;
+    position: relative;
+    left: unset;
+  }
+
+  .single-product
+    .piece-product-single__gallery
+    .media-container:not(:last-child) {
+    margin-bottom: 15px;
   }
 }

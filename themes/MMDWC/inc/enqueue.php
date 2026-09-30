@@ -22,7 +22,7 @@ function theme_load_reset_css()
 // WOOCOMMERCE CUSTOM CSS
 //////////////////////////////////////////////////////////////
 
-add_action('wp_enqueue_scripts', 'theme_load_woocommerce_custom_css', 31);
+// add_action('wp_enqueue_scripts', 'theme_load_woocommerce_custom_css', 31);
 
 function theme_load_woocommerce_custom_css()
 {
@@ -140,10 +140,26 @@ function theme_load_scrollto()
 // SWIPER
 //////////////////////////////////////////////////////////////
 
+function hamrei_uses_swiper()
+{
+	return (
+		is_page_template('page-HOME.php') ||
+		is_page_template('page-ABOUT.php') ||
+		is_page_template('page-PROJECTS.php') ||
+		is_singular('piece') ||
+		is_post_type_archive('piece') ||
+		is_tax('piece_category')
+	);
+}
+
 add_action('wp_enqueue_scripts', 'theme_load_swiper', 25);
 
 function theme_load_swiper()
 {
+	if (!hamrei_uses_swiper()) {
+		return;
+	}
+
 	$swiper_css_path = get_template_directory() . '/assets/vendor/swiper/swiper-bundle.min.css';
 	$swiper_js_path = get_template_directory() . '/assets/vendor/swiper/swiper-bundle.min.js';
 
@@ -194,7 +210,7 @@ function theme_load_scripts()
 	wp_enqueue_script(
 		'functions',
 		get_template_directory_uri() . '/assets/js/functions.js',
-		array('jquery', 'swiper'),
+		hamrei_uses_swiper() ? array('jquery', 'swiper') : array('jquery'),
 		file_exists($functions_js_path) ? filemtime($functions_js_path) : null,
 		true
 	);
@@ -208,6 +224,10 @@ add_action('wp_enqueue_scripts', 'theme_load_hero_videos', 30);
 
 function theme_load_hero_videos()
 {
+	if (!is_page_template('page-HOME.php')) {
+		return;
+	}
+
 	$hero_videos_js_path = get_template_directory() . '/assets/js/hero-videos.js';
 
 	wp_enqueue_script(
@@ -222,7 +242,7 @@ function theme_load_hero_videos()
 		'hero-videos',
 		'hamreiHero',
 		[
-			'ajaxUrl' => admin_url('admin-ajax.php'),
+			'ajaxUrl'  => admin_url('admin-ajax.php'),
 			'schedule' => hamrei_get_hero_video_schedule(),
 		]
 	);
@@ -236,6 +256,15 @@ add_action('wp_enqueue_scripts', 'theme_load_woocommerce_custom', 30);
 
 function theme_load_woocommerce_custom()
 {
+	if (
+		!is_woocommerce() &&
+		!is_cart() &&
+		!is_checkout() &&
+		!is_account_page()
+	) {
+		return;
+	}
+
 	$woocommerce_custom_js_path = get_template_directory() . '/assets/js/woocommerce-custom.js';
 
 	wp_enqueue_script(
@@ -245,4 +274,28 @@ function theme_load_woocommerce_custom()
 		file_exists($woocommerce_custom_js_path) ? filemtime($woocommerce_custom_js_path) : null,
 		true
 	);
+}
+
+//////////////////////////////////////////////////////////////
+// REMOVE WOOCOMMERCE JS OUTSIDE WOOCOMMERCE
+//////////////////////////////////////////////////////////////
+
+add_action('wp_enqueue_scripts', 'hamrei_remove_woocommerce_scripts', 100);
+
+function hamrei_remove_woocommerce_scripts()
+{
+	if (
+		is_woocommerce() ||
+		is_cart() ||
+		is_checkout() ||
+		is_account_page()
+	) {
+		return;
+	}
+
+	wp_dequeue_script('wc-jquery-blockui');
+	wp_dequeue_script('wc-add-to-cart');
+	wp_dequeue_script('wc-js-cookie');
+	wp_dequeue_script('woocommerce');
+	wp_dequeue_script('wc-cart-fragments');
 }

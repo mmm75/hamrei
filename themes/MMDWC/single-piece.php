@@ -92,44 +92,7 @@
 
                         <!-- PIECE SPEC FAMILY ------------------------------------------------------------------------------------------------>
 
-                        <?php $families = get_the_terms(get_the_ID(), 'family');
-
-                        if ($families && !is_wp_error($families)) : ?>
-
-                            <?php $family = reset($families);
-
-                            $family_pieces = get_posts([
-                                'post_type'      => 'piece',
-                                'posts_per_page' => 1,
-                                'post_status'    => 'publish',
-                                'post__not_in'   => [get_the_ID()],
-                                'fields'         => 'ids',
-                                'tax_query'      => [
-                                    [
-                                        'taxonomy' => 'family',
-                                        'field'    => 'term_id',
-                                        'terms'    => $family->term_id,
-                                    ],
-                                ],
-                            ]); ?>
-
-                            <?php if ($family_pieces) : ?>
-
-                                <div class="piece-product-single__spec">
-
-                                    <div class="piece-product-single__spec-title"><?php esc_html_e('family', 'mmdwc'); ?></div>
-
-                                    <div class="piece-product-single__spec-content">
-
-                                        <?php get_template_part("/template-parts/piece/section-single-piece-family"); ?>
-
-                                    </div>
-
-                                </div>
-
-                            <?php endif; ?>
-
-                        <?php endif; ?>
+                        <?php get_template_part("/template-parts/piece/section-single-piece-family"); ?>
 
                         <!-- END PIECE SPEC FAMILY ------------------------------------------------------------------------------------------------>
 

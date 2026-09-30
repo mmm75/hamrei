@@ -16,13 +16,7 @@
             ? $current_category->parent
             : $current_category->term_id;
 
-        $child_categories = get_terms([
-            'taxonomy'   => 'piece_category',
-            'parent'     => $expanded_parent_id,
-            'hide_empty' => false,
-            'orderby'    => 'term_order',
-            'order'      => 'ASC',
-        ]);
+        $child_categories = hamrei_get_piece_category_children($expanded_parent_id);
     }
 
     ?>
@@ -65,19 +59,13 @@
 
         <nav class="header-mobile__nav">
 
-            <?php
-            wp_nav_menu([
-                'menu'       => 'Menu Header',
-                'container'  => false,
-                'menu_class' => 'header-mobile__menu-list',
-            ]);
-            ?>
+            <?php echo hamrei_get_header_menu_html('header-mobile__menu-list'); ?>
 
         </nav>
 
         <div class="header-mobile__languages">
 
-            <?php do_action('wpml_add_language_selector'); ?>
+            <?php echo hamrei_get_language_selector_html(); ?>
 
         </div>
 
@@ -127,14 +115,7 @@
                 <ul class="header-mobile__filters-list">
 
                     <?php
-
-                    $piece_categories = get_terms([
-                        'taxonomy'   => 'piece_category',
-                        'parent'     => 0,
-                        'hide_empty' => false,
-                        'orderby'    => 'term_order',
-                        'order'      => 'ASC',
-                    ]);
+                    $piece_categories = hamrei_get_piece_parent_categories();
 
                     ?>
 
@@ -203,6 +184,54 @@
         </div>
 
         <!-- END HEADER MOBILE COLLECTION ------------------------------------------------------------------------------------------------>
+
+    <?php endif; ?>
+
+    <?php if (is_shop() || is_product()) : ?>
+
+        <?php
+        $product_navigation = is_product()
+            ? hamrei_get_product_navigation()
+            : false;
+        ?>
+
+        <!-- HEADER MOBILE E-SHOP ------------------------------------------------------------------------------------------------>
+
+        <div class="header-mobile__product">
+
+            <div class="header-mobile__product-shop">
+
+                <?php esc_html_e('e-shop', 'mmdwc'); ?>
+
+            </div>
+
+            <?php if (is_product() && $product_navigation) : ?>
+
+                <nav class="header-mobile__product-navigation">
+
+                    <a
+                        href="<?php echo esc_url($product_navigation['previous']); ?>"
+                        class="header-mobile__product-previous" data-text="<?php esc_html_e('previous', 'mmdwc'); ?>">
+
+                        <?php esc_html_e('previous', 'mmdwc'); ?>
+
+                    </a>
+
+                    <a
+                        href="<?php echo esc_url($product_navigation['next']); ?>"
+                        class="header-mobile__product-next" data-text="<?php esc_html_e('next', 'mmdwc'); ?>">
+
+                        <?php esc_html_e('next', 'mmdwc'); ?>
+
+                    </a>
+
+                </nav>
+
+            <?php endif; ?>
+
+        </div>
+
+        <!-- END HEADER MOBILE E-SHOP ------------------------------------------------------------------------------------------------>
 
     <?php endif; ?>
 
