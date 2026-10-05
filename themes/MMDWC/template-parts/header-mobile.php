@@ -121,6 +121,16 @@
 
                     <?php if (!is_wp_error($piece_categories)) : ?>
 
+                        <li class="header-mobile__filters-item<?php echo is_post_type_archive('piece') ? ' is-current' : ''; ?>">
+
+                            <a href="<?php echo esc_url(get_post_type_archive_link('piece')); ?>">
+
+                                <?php esc_html_e('all', 'mmdwc'); ?>
+
+                            </a>
+
+                        </li>
+
                         <?php foreach ($piece_categories as $piece_category) : ?>
 
                             <?php
@@ -152,6 +162,16 @@
                                 ) : ?>
 
                                     <ul class="header-mobile__filters-children">
+
+                                        <li class="<?php echo $current_category && $current_category->term_id === $piece_category->term_id ? 'is-current' : ''; ?>">
+
+                                            <a href="<?php echo esc_url(get_term_link($piece_category)); ?>">
+
+                                                <?php esc_html_e('all', 'mmdwc'); ?>
+
+                                            </a>
+
+                                        </li>
 
                                         <?php foreach ($child_categories as $child_category) : ?>
 

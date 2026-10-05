@@ -41,11 +41,11 @@ $hero_video_url = 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $hero_video_id . '/play
 
         </h3>
 
-        <div class="p--big">
+        <a href="mailto:info@hamrei.com" class="custom-button">
 
-            <p><a href="mailto:info@hamrei.com">info@hamrei.com</a></p>
+            Contact us
 
-        </div>
+        </a>
 
     </div>
 

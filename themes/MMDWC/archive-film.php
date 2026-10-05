@@ -40,7 +40,7 @@
 
                             <div class="media-container media-container--16-9 films__media">
 
-                                <?php echo wp_get_attachment_image($video_thumbnail, 'large'); ?>
+                                <?php echo wp_get_attachment_image($video_thumbnail, 'image_film'); ?>
 
                             </div>
 

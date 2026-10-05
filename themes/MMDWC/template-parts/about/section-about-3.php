@@ -1,6 +1,7 @@
 <?php
-$about_us_3_left = get_field('about_us_3_left', apply_filters('wpml_object_id', 18, 'page', true));
-$about_us_3_right = get_field('about_us_3_right', apply_filters('wpml_object_id', 18, 'page', true));
+$about_page_id = apply_filters('wpml_object_id', 18, 'page', true);
+$about_us_3_left = get_field('about_us_3_left', $about_page_id);
+$about_us_3_right = get_field('about_us_3_right', $about_page_id);
 ?>
 
 <?php if ($about_us_3_left || $about_us_3_right) : ?>

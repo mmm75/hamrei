@@ -29,4 +29,5 @@ function theme_setup()
 	add_image_size('image_square', 1500, 1500, true);
 	add_image_size('image_thumb_product', 900, 1200, true);
 	add_image_size('large_medium', 1500, 1500);
+	add_image_size('image_film', 2048, 1152, true);
 }

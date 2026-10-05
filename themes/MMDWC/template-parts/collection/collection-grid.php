@@ -44,6 +44,8 @@ $pieces = $args['query'];
 
     <?php endwhile; ?>
 
+    <?php wp_reset_postdata(); ?>
+
 </div>
 
 <?php

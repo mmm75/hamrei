@@ -6,9 +6,13 @@
 
         <section class="piece-product-single">
 
-            <!-- DESKTOP ------------------------------------------------------------------------------------------------>
+            <?php
+            $images = get_field('images');
+            ?>
 
-            <div class="piece-product-single__gallery desktop">
+            <!-- PIECE FEATURED IMAGE ------------------------------------------------------------------------------------------------>
+
+            <div class="piece-product-single__thumbnail">
 
                 <div class="media-container">
 
@@ -16,40 +20,31 @@
 
                 </div>
 
-                <?php
-                $images = get_field('images');
-                $size = 'large_medium';
-                if ($images): ?>
+            </div>
 
-                    <?php foreach ($images as $image_id): ?>
+            <!-- END PIECE FEATURED IMAGE ------------------------------------------------------------------------------------------------>
+
+            <!-- PIECE GALLERY ------------------------------------------------------------------------------------------------>
+
+            <?php if ($images) : ?>
+
+                <div class="piece-product-single__gallery">
+
+                    <?php foreach ($images as $image_id) : ?>
 
                         <div class="media-container">
 
-                            <?php echo wp_get_attachment_image($image_id, $size); ?>
+                            <?php echo wp_get_attachment_image($image_id, 'large_medium'); ?>
 
                         </div>
 
                     <?php endforeach; ?>
 
-                <?php endif; ?>
-
-            </div>
-
-            <!-- END DESKTOP ------------------------------------------------------------------------------------------------>
-
-            <!-- MOBILE ------------------------------------------------------------------------------------------------>
-
-            <div class="piece-product-single__thumbnail mobile">
-
-                <div class="media-container">
-
-                    <?php the_post_thumbnail('large_medium'); ?>
-
                 </div>
 
-            </div>
+            <?php endif; ?>
 
-            <!-- MOBILE ------------------------------------------------------------------------------------------------>
+            <!-- END PIECE GALLERY ------------------------------------------------------------------------------------------------>
 
             <div class="piece-product-single__details">
 
@@ -118,31 +113,6 @@
                         <?php endif; ?>
 
                     </div>
-
-                    <!-- MOBILE ------------------------------------------------------------------------------------------------>
-
-                    <div class="piece-product-single__gallery mobile">
-
-                        <?php
-                        $images = get_field('images');
-                        $size = 'large_medium';
-                        if ($images): ?>
-
-                            <?php foreach ($images as $image_id): ?>
-
-                                <div class="media-container">
-
-                                    <?php echo wp_get_attachment_image($image_id, $size); ?>
-
-                                </div>
-
-                            <?php endforeach; ?>
-
-                        <?php endif; ?>
-
-                    </div>
-
-                    <!-- END MOBILE ------------------------------------------------------------------------------------------------>
 
                 </div>
 

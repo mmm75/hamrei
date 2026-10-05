@@ -60,16 +60,16 @@ Template Name: TEMPLATE HOME
                                         <div class="media-container media-container--3-4">
 
                                             <video
-                                                autoplay
+                                                class="js-highlight-video"
                                                 muted
                                                 loop
                                                 playsinline
                                                 disablepictureinpicture
                                                 webkit-playsinline
-                                                preload="metadata">
+                                                preload="none">
 
                                                 <source
-                                                    src="https://vz-eb7b1f3f-f93.b-cdn.net/<?php echo esc_attr($video_id); ?>/play_720p.mp4"
+                                                    data-src="https://vz-eb7b1f3f-f93.b-cdn.net/<?php echo esc_attr($video_id); ?>/play_720p.mp4"
                                                     type="video/mp4">
 
                                             </video>

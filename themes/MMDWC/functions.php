@@ -90,7 +90,7 @@ function hamrei_register_options_page()
 // COMING SOON MODE
 //////////////////////////////////////////////////////////////
 
-// add_action('template_redirect', 'hamrei_coming_soon_mode');
+add_action('template_redirect', 'hamrei_coming_soon_mode');
 
 //////////////////////////////////////////////////////////////
 // REDIRECT PUBLIC VISITORS TO COMING SOON PAGE

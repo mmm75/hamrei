@@ -18,7 +18,7 @@
         $video_thumbnail = !empty($video['video_thumbnail']) ? $video['video_thumbnail'] : '';
 
         $video_thumbnail_url = $video_thumbnail
-            ? wp_get_attachment_image_url($video_thumbnail, 'large')
+            ? wp_get_attachment_image_url($video_thumbnail, 'image_film')
             : '';
 
         $video_url = $video_id
@@ -41,7 +41,7 @@
                             playsinline
                             disablepictureinpicture
                             webkit-playsinline
-                            preload="metadata"
+                            preload="none"
                             <?php if ($video_thumbnail_url) : ?>
                             poster="<?php echo esc_url($video_thumbnail_url); ?>"
                             <?php endif; ?>>
@@ -248,12 +248,14 @@
             <?php
 
             $films_query = new WP_Query([
-                'post_type'      => 'film',
-                'post_status'    => 'publish',
-                'posts_per_page' => -1,
-                'post__not_in'   => [get_the_ID()],
-                'orderby'        => 'date',
-                'order'          => 'DESC',
+                'post_type'              => 'film',
+                'post_status'            => 'publish',
+                'posts_per_page'         => -1,
+                'post__not_in'           => [get_the_ID()],
+                'orderby'                => 'date',
+                'order'                  => 'DESC',
+                'no_found_rows'          => true,
+                'update_post_term_cache' => false,
             ]);
 
             ?>
@@ -290,7 +292,7 @@
 
                                     <div class="media-container media-container--16-9 films__media">
 
-                                        <?php echo wp_get_attachment_image($other_video_thumbnail, 'large'); ?>
+                                        <?php echo wp_get_attachment_image($other_video_thumbnail, 'image_film'); ?>
 
                                     </div>
 

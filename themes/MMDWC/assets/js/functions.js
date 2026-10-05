@@ -4,6 +4,7 @@
     window.scrollTo(0, 0);
     headerHomeScroll();
     headerScroll();
+    initHighlightVideos();
     collectionGridSizeControls();
     collectionInfiniteScroll();
     aboutStudioSlider();
@@ -205,6 +206,46 @@
 
     // Start watching the hidden native pagination element
     observer.observe($pagination[0]);
+  }
+
+  function initHighlightVideos() {
+    const videos = document.querySelectorAll('.js-highlight-video');
+
+    if (!videos.length) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target;
+
+          if (entry.isIntersecting) {
+            const source = video.querySelector('source[data-src]');
+
+            if (source) {
+              source.src = source.dataset.src;
+
+              source.removeAttribute('data-src');
+
+              video.load();
+            }
+
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      {
+        rootMargin: '0px',
+        threshold: 0.01,
+      },
+    );
+
+    videos.forEach((video) => {
+      observer.observe(video);
+    });
   }
 
   function aboutStudioSlider() {

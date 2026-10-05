@@ -127,15 +127,24 @@ function hamrei_get_piece_category_children($parent_id)
 }
 
 //////////////////////////////////////////////////////////////
-// PIECES ARCHIVE POSTS PER PAGE
+// OPTIMIZE ARCHIVE QUERIES
 //////////////////////////////////////////////////////////////
 
-add_action('pre_get_posts', 'hamrei_pieces_archive_posts_per_page');
+add_action('pre_get_posts', 'hamrei_optimize_archive_queries');
 
-function hamrei_pieces_archive_posts_per_page($query)
+function hamrei_optimize_archive_queries($query)
 {
-	if (!is_admin() && $query->is_main_query() && is_post_type_archive('piece')) {
+	if (is_admin() || !$query->is_main_query()) {
+		return;
+	}
+
+	if (is_post_type_archive('piece')) {
 		$query->set('posts_per_page', 24);
+	}
+
+	if (is_post_type_archive('film')) {
+		$query->set('no_found_rows', true);
+		$query->set('update_post_term_cache', false);
 	}
 }
 
@@ -195,7 +204,7 @@ function hamrei_piece_category_rewrite_rules($rules)
 }
 
 //////////////////////////////////////////////////////////////
-// ADD BODY CLASS WHEN PIECE CATEGORY HAS CHILDREN
+// ADD BODY CLASSES TO PIECE CATEGORIES
 //////////////////////////////////////////////////////////////
 
 add_filter('body_class', 'hamrei_piece_category_body_class');
@@ -208,12 +217,15 @@ function hamrei_piece_category_body_class($classes)
 
 	$term = get_queried_object();
 
-	$children = get_terms([
-		'taxonomy'   => 'piece_category',
-		'parent'     => $term->term_id,
-		'hide_empty' => false,
-		'number'     => 1,
-	]);
+	if (!$term || is_wp_error($term)) {
+		return $classes;
+	}
+
+	if ($term->parent) {
+		$classes[] = 'piece-category-child';
+	}
+
+	$children = hamrei_get_piece_category_children($term->term_id);
 
 	if (!is_wp_error($children) && !empty($children)) {
 		$classes[] = 'tax-has-children';

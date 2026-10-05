@@ -6,11 +6,15 @@
 
         <section class="piece-product-single">
 
-            <!-- DESKTOP ------------------------------------------------------------------------------------------------>
+            <?php
+            $images = get_field('images');
+            ?>
 
-            <div class="piece-product-single__gallery desktop">
+            <!-- PRODUCT FEATURED IMAGE ------------------------------------------------------------------------------------------------>
 
-                <?php if (has_post_thumbnail()) : ?>
+            <?php if (has_post_thumbnail()) : ?>
+
+                <div class="piece-product-single__thumbnail">
 
                     <div class="media-container">
 
@@ -18,11 +22,17 @@
 
                     </div>
 
-                <?php endif; ?>
+                </div>
 
-                <?php $images = get_field('images'); ?>
+            <?php endif; ?>
 
-                <?php if ($images) : ?>
+            <!-- END PRODUCT FEATURED IMAGE ------------------------------------------------------------------------------------------------>
+
+            <!-- PRODUCT GALLERY ------------------------------------------------------------------------------------------------>
+
+            <?php if ($images) : ?>
+
+                <div class="piece-product-single__gallery">
 
                     <?php foreach ($images as $image_id) : ?>
 
@@ -34,25 +44,11 @@
 
                     <?php endforeach; ?>
 
-                <?php endif; ?>
-
-            </div>
-
-            <!-- END DESKTOP ------------------------------------------------------------------------------------------------>
-
-            <!-- MOBILE ------------------------------------------------------------------------------------------------>
-
-            <div class="piece-product-single__thumbnail mobile">
-
-                <div class="media-container">
-
-                    <?php the_post_thumbnail('large_medium'); ?>
-
                 </div>
 
-            </div>
+            <?php endif; ?>
 
-            <!-- MOBILE ------------------------------------------------------------------------------------------------>
+            <!-- END PRODUCT GALLERY ------------------------------------------------------------------------------------------------>
 
             <div class="piece-product-single__details">
 
@@ -121,31 +117,6 @@
 
                 </div>
 
-                <!-- MOBILE ------------------------------------------------------------------------------------------------>
-
-                <div class="piece-product-single__gallery mobile">
-
-                    <?php
-                    $images = get_field('images');
-                    $size = 'large_medium';
-                    if ($images): ?>
-
-                        <?php foreach ($images as $image_id): ?>
-
-                            <div class="media-container">
-
-                                <?php echo wp_get_attachment_image($image_id, $size); ?>
-
-                            </div>
-
-                        <?php endforeach; ?>
-
-                    <?php endif; ?>
-
-                </div>
-
-                <!-- END MOBILE ------------------------------------------------------------------------------------------------>
-
             </div>
 
         </section>
@@ -166,6 +137,7 @@ $products = new WP_Query([
     'post__not_in'   => [get_the_ID()],
     'orderby'        => 'menu_order',
     'order'          => 'DESC',
+    'no_found_rows'  => true,
 ]);
 
 get_template_part('woocommerce/products-grid', null, [

@@ -1,14 +1,11 @@
 <?php
-
+global $product;
 $products = $args['query'] ?? $GLOBALS['wp_query'];
-
 ?>
 
 <div id="products-grid" class="product-grid">
 
     <?php while ($products->have_posts()) : $products->the_post(); ?>
-
-        <?php $product = wc_get_product(get_the_ID()); ?>
 
         <div class="product-grid__item">
 

@@ -28,13 +28,18 @@ Template Name: TEMPLATE CONTACT
 
                 <?php while (have_rows('contacts')) : the_row(); ?>
 
+                    <?php
+                    $contact_text  = get_sub_field('text');
+                    $contact_email = get_sub_field('e-mail');
+                    ?>
+
                     <!-- CONTACT ITEM ------------------------------------------------------------------------------------------------>
 
                     <div class="contact-item">
 
-                        <h3><?php the_sub_field('text'); ?></h3>
+                        <h3><?php echo esc_html($contact_text); ?></h3>
 
-                        <a href="mailto:<?php the_sub_field('e-mail'); ?>"><?php the_sub_field('e-mail'); ?></a>
+                        <a href="mailto:<?php echo esc_attr($contact_email); ?>"><?php echo esc_html($contact_email); ?></a>
 
                     </div>
 

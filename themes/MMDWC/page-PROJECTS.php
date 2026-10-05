@@ -13,11 +13,14 @@
         <?php
 
         $press_query = new WP_Query([
-            'post_type'      => 'post',
-            'post_status'    => 'publish',
-            'posts_per_page' => -1,
-            'orderby'        => 'date',
-            'order'          => 'DESC',
+            'post_type'              => 'post',
+            'post_status'            => 'publish',
+            'posts_per_page'         => -1,
+            'orderby'                => 'date',
+            'order'                  => 'DESC',
+            'no_found_rows'          => true,
+            'ignore_sticky_posts'    => true,
+            'update_post_term_cache' => false,
         ]);
 
         ?>
@@ -118,7 +121,7 @@
                                                 playsinline
                                                 disablepictureinpicture
                                                 webkit-playsinline
-                                                preload="metadata"
+                                                preload="none"
                                                 <?php if ($video_thumbnail_url) : ?>
                                                 poster="<?php echo esc_url($video_thumbnail_url); ?>"
                                                 <?php endif; ?>>
