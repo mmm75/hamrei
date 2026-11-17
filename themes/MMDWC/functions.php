@@ -5,6 +5,7 @@ require_once get_template_directory() . '/inc/enqueue.php';
 require_once get_template_directory() . '/inc/post-types.php';
 require_once get_template_directory() . '/inc/hero-videos.php';
 require_once get_template_directory() . '/inc/woocommerce.php';
+require_once get_template_directory() . '/inc/mailchimp.php';
 
 //////////////////////////////////////////////////////////////
 // MENU LINK DATA ATTRIBUTES
@@ -86,11 +87,60 @@ function hamrei_register_options_page()
     ]);
 }
 
+
 //////////////////////////////////////////////////////////////
-// COMING SOON MODE
+//DISABLE WOOCOMMERCE PAGES
 //////////////////////////////////////////////////////////////
 
-add_action('template_redirect', 'hamrei_coming_soon_mode');
+/**
+ * Disable WooCommerce frontend pages.
+ */
+function hamrei_disable_shop_pages()
+{
+
+    if (! function_exists('is_woocommerce')) {
+        return;
+    }
+
+    if (
+        is_woocommerce() ||
+        is_cart() ||
+        is_checkout() ||
+        is_account_page()
+    ) {
+        wp_safe_redirect(home_url('/'), 302);
+        exit;
+    }
+}
+add_action('template_redirect', 'hamrei_disable_shop_pages', 20);
+
+
+/**
+ * Exclude WooCommerce products from Yoast sitemap.
+ */
+add_filter('wpseo_sitemap_exclude_post_type', function ($exclude, $post_type) {
+    return $post_type === 'product' ? true : $exclude;
+}, 10, 2);
+
+
+/**
+ * Exclude WooCommerce pages from Yoast sitemap.
+ */
+add_filter('wpseo_exclude_from_sitemap_by_post_ids', function ($excluded) {
+
+    $pages = array(
+        wc_get_page_id('shop'),
+        wc_get_page_id('cart'),
+        wc_get_page_id('checkout'),
+        wc_get_page_id('myaccount')
+    );
+
+    return array_merge($excluded, array_filter($pages, function ($id) {
+        return $id > 0;
+    }));
+});
+
+
 
 //////////////////////////////////////////////////////////////
 // REDIRECT PUBLIC VISITORS TO COMING SOON PAGE
@@ -155,3 +205,68 @@ function hamrei_coming_soon_mode()
     wp_safe_redirect(home_url('/coming-soon/'));
     exit;
 }
+
+//////////////////////////////////////////////////////////////
+// CUSTOM BACK OFFICE
+//////////////////////////////////////////////////////////////
+
+add_action('admin_menu', function () {
+
+    $user = wp_get_current_user();
+
+    if (!in_array('shop_manager', (array) $user->roles, true)) {
+        return;
+    }
+
+    /*
+	 * Standard WordPress menus.
+	 */
+    remove_menu_page('edit-comments.php'); // Comments
+    remove_menu_page('themes.php');        // Appearance
+    remove_menu_page('users.php');         // Users
+    remove_menu_page('tools.php');         // Tools
+
+    /*
+	 * Known Yoast / WPML slugs.
+	 */
+    remove_menu_page('wpseo_dashboard');
+    remove_menu_page('wpseo_page_settings');
+    remove_menu_page('wpseo_workouts');
+
+    // Current WPML main menu slug.
+    remove_menu_page('tm/menu/main.php');
+
+    // Old WPML slug, kept as fallback.
+    remove_menu_page('sitepress-multilingual-cms/menu/languages.php');
+
+    /*
+	 * Final fallback:
+	 * remove Yoast SEO / WPML directly from the generated
+	 * WordPress menu, whatever slug the plugin has registered.
+	 */
+    global $menu;
+
+    foreach ((array) $menu as $key => $item) {
+
+        $label = isset($item[0])
+            ? trim(wp_strip_all_tags($item[0]))
+            : '';
+
+        $slug = isset($item[2])
+            ? (string) $item[2]
+            : '';
+
+        $is_yoast =
+            stripos($label, 'Yoast SEO') !== false ||
+            strpos($slug, 'wpseo_') !== false;
+
+        $is_wpml =
+            $label === 'WPML' ||
+            strpos($slug, 'tm/menu/') !== false ||
+            strpos($slug, 'sitepress-multilingual-cms') !== false;
+
+        if ($is_yoast || $is_wpml) {
+            unset($menu[$key]);
+        }
+    }
+}, PHP_INT_MAX);

@@ -1,4 +1,7 @@
-<?php $products = get_field('selection', 9); ?>
+<?php
+$shop_page_id = apply_filters('wpml_object_id', 9, 'page', true);
+$products = get_field('selection', $shop_page_id);
+?>
 
 <?php if ($products) : ?>
 
@@ -19,6 +22,8 @@
                 <?php foreach ($products as $product_id) : ?>
 
                     <?php
+                    $product_id = apply_filters('wpml_object_id', $product_id, 'product', true);
+
                     $product_url = get_permalink($product_id);
                     $title       = get_field('title', $product_id);
                     $sub_title   = get_field('sub-title', $product_id);

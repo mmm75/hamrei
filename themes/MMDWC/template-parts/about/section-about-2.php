@@ -57,7 +57,16 @@
 
                                 <div class="media-container media-container--3-2">
 
-                                    <?php echo wp_get_attachment_image($image_id, 'large_medium'); ?>
+                                    <?php
+                                    echo wp_get_attachment_image(
+                                        $image_id,
+                                        'large_medium',
+                                        false,
+                                        [
+                                            'sizes' => '(max-width: 768px) 100vw, 55vw',
+                                        ]
+                                    );
+                                    ?>
 
                                 </div>
 

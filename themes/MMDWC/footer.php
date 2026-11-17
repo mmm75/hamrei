@@ -26,15 +26,54 @@
 
             <div class="p--normal">
                 <p>
-                    Don't<br>
-                    miss<br>
-                    anything
+                    <?php echo wp_kses_post(__("Don't miss a thing", 'mmdwc')); ?>
                 </p>
             </div>
 
-            <a href="#" class="custom-button">
-                <?php esc_html_e('sign up', 'mmdwc'); ?>
-            </a>
+            <div class="mailchimp">
+
+                <form
+                    class="pfb-signup-submission"
+                    autocomplete="off"
+                    method="post"
+                    data-ajax-url="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"
+                    data-success-message="<?php echo esc_attr__("Thank you for subscribing.", 'mmdwc'); ?>"
+                    data-error-message="<?php echo esc_attr__('An error occurred. Please try again.', 'mmdwc'); ?>">
+
+                    <input
+                        type="email"
+                        required
+                        autocomplete="off"
+                        name="email"
+                        class="pfb-signup-box-email pfb-signup-box custom-button"
+                        placeholder="<?php esc_attr_e('sign up', 'mmdwc'); ?>">
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="hamrei_mailchimp_signup">
+
+                    <?php wp_nonce_field(
+                        'hamrei_mailchimp_signup',
+                        'hamrei_mailchimp_nonce'
+                    ); ?>
+
+                    <button
+                        type="submit"
+                        class="pfb-signup-button submit-button custom-button">
+
+                        <?php _e('Ok', 'mmdwc'); ?>
+
+                    </button>
+
+                </form>
+
+                <div
+                    class="mailchimp__message"
+                    aria-live="polite">
+                </div>
+
+            </div>
 
         </div>
 

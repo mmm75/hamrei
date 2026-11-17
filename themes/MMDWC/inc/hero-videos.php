@@ -61,6 +61,7 @@ function hamrei_get_current_hero_video_id()
     $field_name = hamrei_get_current_hero_video_field();
 
     return get_field($field_name, 'option');
+    //return 'e5cc68f0-7f83-47b9-9f12-e180ec457e6a';
 }
 
 //////////////////////////////////////////////////////////////
@@ -117,6 +118,7 @@ function hamrei_get_next_hero_video_ajax()
     }
 
     wp_send_json_success([
-        'url' => 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $video_id . '/play_720p.mp4',
+        'url_desktop' => 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $video_id . '/play_1080p.mp4',
+        'url_mobile'  => 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $video_id . '/play_720p.mp4',
     ]);
 }

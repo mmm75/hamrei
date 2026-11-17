@@ -8,9 +8,18 @@
 
             <?php if ($about_us_1['image']) : ?>
 
-                <div class="media-container media-container--square">
+                <div class="media-container media-container--extend">
 
-                    <?php echo wp_get_attachment_image($about_us_1['image'], 'image_square'); ?>
+                    <?php
+                    echo wp_get_attachment_image(
+                        $about_us_1['image'],
+                        'image_square',
+                        false,
+                        [
+                            'sizes' => '(max-width: 768px) calc(100vw - 30px), 50vw',
+                        ]
+                    );
+                    ?>
 
                 </div>
 

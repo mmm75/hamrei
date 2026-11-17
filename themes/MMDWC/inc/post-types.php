@@ -93,7 +93,7 @@ function hamrei_get_piece_parent_categories()
 	$categories = get_terms([
 		'taxonomy'   => 'piece_category',
 		'parent'     => 0,
-		'hide_empty' => false,
+		'hide_empty' => true,
 		'orderby'    => 'term_order',
 		'order'      => 'ASC',
 	]);
@@ -118,7 +118,7 @@ function hamrei_get_piece_category_children($parent_id)
 	$cache[$parent_id] = get_terms([
 		'taxonomy'   => 'piece_category',
 		'parent'     => $parent_id,
-		'hide_empty' => false,
+		'hide_empty' => true,
 		'orderby'    => 'term_order',
 		'order'      => 'ASC',
 	]);
@@ -138,11 +138,29 @@ function hamrei_optimize_archive_queries($query)
 		return;
 	}
 
-	if (is_post_type_archive('piece')) {
-		$query->set('posts_per_page', 24);
+	if ($query->is_post_type_archive('piece')) {
+
+		$query->set('post_status', 'publish');
+		$query->set('posts_per_page', 20);
+
+		$query->set('orderby', 'menu_order');
+		$query->set('order', 'ASC');
+
+		$query->set('update_post_term_cache', false);
 	}
 
-	if (is_post_type_archive('film')) {
+	if ($query->is_tax('piece_category')) {
+
+		$query->set('post_status', 'publish');
+
+		$query->set('orderby', 'menu_order');
+		$query->set('order', 'ASC');
+
+		$query->set('update_post_term_cache', false);
+	}
+
+	if ($query->is_post_type_archive('film')) {
+
 		$query->set('no_found_rows', true);
 		$query->set('update_post_term_cache', false);
 	}
@@ -158,10 +176,20 @@ function hamrei_piece_category_rewrite_rules($rules)
 {
 	$custom_rules = [];
 
+	$current_language = apply_filters('wpml_current_language', null);
+
+	// Get taxonomy terms from ALL WPML languages.
+	do_action('wpml_switch_language', 'all');
+
 	$terms = get_terms([
 		'taxonomy'   => 'piece_category',
 		'hide_empty' => false,
 	]);
+
+	// WPML 4.x: restore the previous language.
+	if ($current_language) {
+		do_action('wpml_switch_language', $current_language);
+	}
 
 	if (is_wp_error($terms)) {
 		return $rules;
@@ -187,7 +215,7 @@ function hamrei_piece_category_rewrite_rules($rules)
 
 				$ancestor = get_term($ancestor_id, 'piece_category');
 
-				if (!is_wp_error($ancestor)) {
+				if (!is_wp_error($ancestor) && $ancestor) {
 					$ancestor_slugs[] = $ancestor->slug;
 				}
 			}
@@ -197,10 +225,171 @@ function hamrei_piece_category_rewrite_rules($rules)
 			}
 		}
 
-		$custom_rules['^collection/' . $term_path . '/?$'] = 'index.php?piece_category=' . $term->slug;
+		$custom_rules['^collection/' . $term_path . '/?$'] =
+			'index.php?piece_category=' . $term->slug;
 	}
 
 	return $custom_rules + $rules;
+}
+
+//////////////////////////////////////////////////////////////
+// SYNC PIECE ORDER EN → PT
+//////////////////////////////////////////////////////////////
+
+add_action('PTO/order_update_complete', 'hamrei_sync_piece_order_wpml');
+
+function hamrei_sync_piece_order_wpml()
+{
+	global $wpdb;
+
+	// Get every Piece, regardless of language
+	$piece_ids = get_posts([
+		'post_type'        => 'piece',
+		'post_status'      => ['publish', 'draft', 'private'],
+		'posts_per_page'   => -1,
+		'fields'           => 'ids',
+		'suppress_filters' => true,
+	]);
+
+	if (empty($piece_ids)) {
+		return;
+	}
+
+	$english_ids = [];
+
+	foreach ($piece_ids as $piece_id) {
+		$english_id = apply_filters(
+			'wpml_object_id',
+			$piece_id,
+			'piece',
+			false,
+			'en'
+		);
+
+		if ($english_id) {
+			$english_ids[$english_id] = $english_id;
+		}
+	}
+
+	foreach ($english_ids as $english_id) {
+
+		$portuguese_id = apply_filters(
+			'wpml_object_id',
+			$english_id,
+			'piece',
+			false,
+			'pt-pt'
+		);
+
+		if (!$portuguese_id || $portuguese_id == $english_id) {
+			continue;
+		}
+
+		$english_order = (int) get_post_field('menu_order', $english_id);
+		$portuguese_order = (int) get_post_field('menu_order', $portuguese_id);
+
+		if ($english_order === $portuguese_order) {
+			continue;
+		}
+
+		$wpdb->update(
+			$wpdb->posts,
+			['menu_order' => $english_order],
+			['ID' => $portuguese_id],
+			['%d'],
+			['%d']
+		);
+
+		clean_post_cache($portuguese_id);
+	}
+}
+
+//////////////////////////////////////////////////////////////
+// SYNC PIECE MEDIA EN → PT
+//////////////////////////////////////////////////////////////
+
+add_action('acf/save_post', 'hamrei_sync_piece_media_to_pt', 20);
+
+function hamrei_sync_piece_media_to_pt($post_id)
+{
+	$post_id = (int) $post_id;
+
+	if (!$post_id || get_post_type($post_id) !== 'piece') {
+		return;
+	}
+
+	$language = apply_filters(
+		'wpml_element_language_code',
+		null,
+		[
+			'element_id'   => $post_id,
+			'element_type' => 'post_piece',
+		]
+	);
+
+	// English is the source of truth.
+	if ($language !== 'en') {
+		return;
+	}
+
+	$pt_id = apply_filters(
+		'wpml_object_id',
+		$post_id,
+		'piece',
+		false,
+		'pt-pt'
+	);
+
+	if (!$pt_id || (int) $pt_id === $post_id) {
+		return;
+	}
+
+	$pt_id = (int) $pt_id;
+
+	/*
+     * Featured image:
+     * use EXACTLY the same attachment ID as EN.
+     */
+	$thumbnail_id = (int) get_post_meta(
+		$post_id,
+		'_thumbnail_id',
+		true
+	);
+
+	if ($thumbnail_id) {
+		update_post_meta(
+			$pt_id,
+			'_thumbnail_id',
+			$thumbnail_id
+		);
+	} else {
+		delete_post_meta(
+			$pt_id,
+			'_thumbnail_id'
+		);
+	}
+
+	/*
+     * ACF gallery "images":
+     * use EXACTLY the same attachment IDs as EN.
+     */
+	$images = get_post_meta(
+		$post_id,
+		'images',
+		true
+	);
+
+	if (!is_array($images)) {
+		$images = [];
+	}
+
+	update_field(
+		'images',
+		$images,
+		$pt_id
+	);
+
+	clean_post_cache($pt_id);
 }
 
 //////////////////////////////////////////////////////////////
@@ -278,9 +467,9 @@ function hamrei_register_films_post_type()
 {
 	register_post_type('film', [
 		'labels' => [
-			'name'               => 'Films',
-			'singular_name'      => 'Film',
-			'menu_name'          => 'Films',
+			'name'          => __('Films', 'mmdwc'),
+			'singular_name' => __('Film', 'mmdwc'),
+			'menu_name'     => __('Films', 'mmdwc'),
 			'add_new'            => 'Add New',
 			'add_new_item'       => 'Add New Film',
 			'edit_item'          => 'Edit Film',
@@ -309,3 +498,26 @@ function hamrei_register_films_post_type()
 		'menu_icon' => 'dashicons-video-alt3',
 	]);
 }
+
+//////////////////////////////////////////////////////////////
+// RENAME POSTS TO PROJECTS
+//////////////////////////////////////////////////////////////
+
+add_filter('post_type_labels_post', function ($labels) {
+
+	$labels->name               = 'Projects';
+	$labels->singular_name      = 'Project';
+	$labels->menu_name          = 'Projects';
+	$labels->name_admin_bar     = 'Project';
+	$labels->all_items          = 'All Projects';
+	$labels->add_new            = 'Add Project';
+	$labels->add_new_item       = 'Add New Project';
+	$labels->edit_item          = 'Edit Project';
+	$labels->new_item           = 'New Project';
+	$labels->view_item          = 'View Project';
+	$labels->search_items       = 'Search Projects';
+	$labels->not_found          = 'No projects found';
+	$labels->not_found_in_trash = 'No projects found in Trash';
+
+	return $labels;
+});

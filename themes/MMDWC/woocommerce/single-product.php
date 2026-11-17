@@ -18,8 +18,14 @@
 
                     <div class="media-container">
 
-                        <?php the_post_thumbnail('large_medium'); ?>
-
+                        <?php
+                        the_post_thumbnail(
+                            'large_medium',
+                            [
+                                'sizes' => '(max-width: 768px) 100vw, 50vw',
+                            ]
+                        );
+                        ?>
                     </div>
 
                 </div>
@@ -38,7 +44,16 @@
 
                         <div class="media-container">
 
-                            <?php echo wp_get_attachment_image($image_id, 'large_medium'); ?>
+                            <?php
+                            echo wp_get_attachment_image(
+                                $image_id,
+                                'large_medium',
+                                false,
+                                [
+                                    'sizes' => '(max-width: 768px) 100vw, 50vw',
+                                ]
+                            );
+                            ?>
 
                         </div>
 

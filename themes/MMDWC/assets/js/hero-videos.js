@@ -51,7 +51,7 @@
   }
 
   function heroVideoPreload() {
-    const $video = $('#video');
+    const $video = $('.hero__video');
 
     // Stop if the page does not contain a Hero video
     if (!$video.length) {
@@ -61,7 +61,7 @@
     // Wait until the current Hero video is actually playing
     $video.one('playing', function () {
       function preloadAfterDelay() {
-        // Give the page 5 extra seconds before loading the next video
+        // Give the page 5 extra seconds before retrieving the next video URL
         setTimeout(function () {
           preloadNextHeroVideo();
         }, 5000);
@@ -77,7 +77,7 @@
   }
 
   function preloadNextHeroVideo() {
-    const $video = $('#video');
+    const $video = $('.hero__video');
 
     // Ask WordPress only for the video belonging to the next time slot
     $.post(
@@ -87,24 +87,26 @@
       },
       function (response) {
         // Stop if WordPress could not return a valid video URL
-        if (!response.success || !response.data.url) {
+        if (
+          !response.success ||
+          !response.data.url_desktop ||
+          !response.data.url_mobile
+        ) {
           return;
         }
 
-        // Create an invisible video element to preload the next video
-        const nextVideo = document.createElement('video');
-        nextVideo.preload = 'auto';
-        nextVideo.src = response.data.url;
-        nextVideo.load();
+        const nextVideoUrl =
+          window.innerWidth <= 768
+            ? response.data.url_mobile
+            : response.data.url_desktop;
 
-        // Store the URL so it is ready when the time slot changes
-        $video.data('next-video-url', response.data.url);
+        $video.data('next-video-url', nextVideoUrl);
       },
     );
   }
 
   function heroVideoWatchTimeSlot() {
-    const $video = $('#video');
+    const $video = $('.hero__video');
 
     // Stop if the page does not contain a Hero video
     if (!$video.length) {
@@ -113,6 +115,9 @@
 
     // Remember the time slot active when the page loads
     let currentSlot = getHeroVideoSlot();
+
+    // Give the current Hero video an ID based on its time slot
+    $video.attr('id', 'video-' + currentSlot);
 
     // Check at the exact start of every minute if Lisbon has entered a new time slot
     runEveryMinute(function () {
@@ -123,7 +128,7 @@
         return;
       }
 
-      // Retrieve the next video URL that was preloaded earlier
+      // Retrieve the next video URL that was prepared earlier
       const nextVideoUrl = $video.data('next-video-url');
 
       if (!nextVideoUrl) {
@@ -138,7 +143,10 @@
       // The new time slot is now active
       currentSlot = newSlot;
 
-      // The preloaded video is now the current video
+      // Update the Hero video ID to match the new time slot
+      $video.attr('id', 'video-' + currentSlot);
+
+      // The prepared video URL is now the current video
       $video.removeData('next-video-url');
 
       // Wait 5 seconds before preparing the following time slot

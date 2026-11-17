@@ -26,8 +26,8 @@ function theme_setup()
 	// IMAGE SIZES
 	//////////////////////////////////////////////////////////////
 
-	add_image_size('image_square', 1500, 1500, true);
+	add_image_size('image_square', 900, 900, true);
 	add_image_size('image_thumb_product', 900, 1200, true);
-	add_image_size('large_medium', 1500, 1500);
-	add_image_size('image_film', 2048, 1152, true);
+	add_image_size('large_medium', 1200, 1200);
+	add_image_size('image_film', 1024, 576, true);
 }

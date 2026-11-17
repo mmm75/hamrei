@@ -8,9 +8,20 @@
         $sub_title = get_field('sub-title');
         $sub_title_2 = get_field('sub-title_2');
         $text = get_field('text');
+        $date = get_field("date");
 
         $left_column = get_field('left_column');
         $pieces = get_field('pieces');
+
+        if (!empty($pieces) && is_array($pieces)) {
+            $pieces = array_values(array_filter($pieces, function ($piece) {
+                $piece_id = is_object($piece) ? $piece->ID : (int) $piece;
+
+                return $piece_id
+                    && get_post_type($piece_id) === 'piece'
+                    && get_post_status($piece_id) === 'publish';
+            }));
+        }
 
         $video = get_field('video');
 
@@ -70,11 +81,15 @@
 
             <div class="film-single__header">
 
-                <div class="title-date film-single__date">
+                <?php if ($date) : ?>
 
-                    <?php echo get_the_date('F j, Y'); ?>
+                    <div class="title-date film-single__date">
 
-                </div>
+                        <?php echo $date; ?>
+
+                    </div>
+
+                <?php endif; ?>
 
                 <?php if ($title || $sub_title || $sub_title_2) : ?>
 
@@ -273,7 +288,7 @@
                         $other_title = get_field('title');
                         $other_sub_title = get_field('sub-title');
                         $other_sub_title_2 = get_field('sub-title_2');
-
+                        $date = get_field("date");
                         $other_video = get_field('video');
 
                         $other_video_thumbnail = !empty($other_video['video_thumbnail'])
@@ -300,11 +315,15 @@
 
                                 <div class="films__content">
 
-                                    <div class="title-date films__date">
+                                    <?php if ($date) : ?>
 
-                                        <?php echo get_the_date('F j, Y'); ?>
+                                        <div class="title-date films__date">
 
-                                    </div>
+                                            <?php echo $date; ?>
+
+                                        </div>
+
+                                    <?php endif; ?>
 
                                     <?php if ($other_title || $other_sub_title || $other_sub_title_2) : ?>
 

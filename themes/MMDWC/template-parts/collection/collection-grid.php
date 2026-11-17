@@ -12,7 +12,7 @@ $pieces = $args['query'];
     <?php endif; ?>
 </h1>
 
-<div id="collection-grid" class="collection-grid collection-grid--3">
+<div id="collection-grid" class="collection-grid collection-grid--4">
 
     <?php while ($pieces->have_posts()) : $pieces->the_post(); ?>
 
@@ -24,7 +24,14 @@ $pieces = $args['query'];
 
                     <div class="media-container media-container--square">
 
-                        <?php the_post_thumbnail('image_square'); ?>
+                        <?php
+                        the_post_thumbnail(
+                            'image_square',
+                            [
+                                'sizes' => '(max-width: 768px) 100vw, 50vw',
+                            ]
+                        );
+                        ?>
 
                     </div>
 
@@ -61,7 +68,7 @@ if ($next_page) :
 <?php endif; ?>
 
 <!-- EXPLORE OUR SHOP SECTION ------------------------------------------------------------------------------------------------>
-
-<?php get_template_part("/template-parts/section-explore-our-shop"); ?>
+<!-- HIDDEN V1 -->
+<!-- < ?php get_template_part("/template-parts/section-explore-our-shop"); ?> -->
 
 <!-- END EXPLORE OUR SHOP SECTION ------------------------------------------------------------------------------------------------>

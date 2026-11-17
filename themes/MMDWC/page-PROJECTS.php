@@ -47,129 +47,55 @@
                     $text = get_field('text');
                     $link = get_field('link');
                     $file = get_field('file');
-                    $left_column = get_field('left_column');
-                    $video = get_field('video');
-                    $carousel = get_field('carousel');
-
-                    $video_id = !empty($video['video_id']) ? $video['video_id'] : '';
-                    $video_thumbnail = !empty($video['video_thumbnail']) ? $video['video_thumbnail'] : '';
-                    $video_thumbnail_url = $video_thumbnail
-                        ? wp_get_attachment_image_url($video_thumbnail, 'large')
-                        : '';
-
-                    $video_url = $video_id
-                        ? 'https://vz-eb7b1f3f-f93.b-cdn.net/' . $video_id . '/play_720p.mp4'
-                        : '';
-
-                    $has_left_column = !empty($left_column['title']) || !empty($left_column['text']);
-
+                    $date = get_field("date");
                     ?>
 
-                    <?php if ($has_left_column) : ?>
 
-                        <!-- PROJECT ITEM WITH LEFT COLUMN ------------------------------------------------------------------------------------------------>
 
-                        <article class="project-item project-item--with-left-column">
+                    <!-- PROJECT ITEM STANDARD ------------------------------------------------------------------------------------------------>
 
-                            <!-- PROJECT ITEM MEDIA ------------------------------------------------------------------------------------------------>
+                    <article class="project-item<?php echo $project_index % 2 ? ' project-item--reverse' : ''; ?>">
 
-                            <?php if ($carousel || $video_id || has_post_thumbnail()) : ?>
+                        <!-- PROJECT ITEM IMAGE ------------------------------------------------------------------------------------------------>
 
-                                <div class="project-item__media">
+                        <div class="project-item__image">
 
-                                    <?php if ($carousel) : ?>
+                            <?php if (has_post_thumbnail()) : ?>
 
-                                        <!-- PROJECT ITEM CAROUSEL ------------------------------------------------------------------------------------------------>
+                                <div class="media-container media-container--square">
 
-                                        <div class="swiper project-item__carousel">
-
-                                            <div class="swiper-wrapper">
-
-                                                <?php foreach ($carousel as $image) : ?>
-
-                                                    <?php
-                                                    $image_id = is_array($image)
-                                                        ? $image['ID']
-                                                        : $image;
-                                                    ?>
-
-                                                    <div class="swiper-slide project-item__carousel-slide">
-
-                                                        <div class="media-container project-item__carousel-media">
-
-                                                            <?php echo wp_get_attachment_image($image_id, 'large_medium'); ?>
-
-                                                        </div>
-
-                                                    </div>
-
-                                                <?php endforeach; ?>
-
-                                            </div>
-
-                                        </div>
-
-                                        <!-- END PROJECT ITEM CAROUSEL ------------------------------------------------------------------------------------------------>
-
-                                    <?php elseif ($video_id) : ?>
-
-                                        <!-- PROJECT ITEM VIDEO ------------------------------------------------------------------------------------------------>
-
-                                        <div class="media-container media-container--16-9 video-container">
-
-                                            <video
-                                                playsinline
-                                                disablepictureinpicture
-                                                webkit-playsinline
-                                                preload="none"
-                                                <?php if ($video_thumbnail_url) : ?>
-                                                poster="<?php echo esc_url($video_thumbnail_url); ?>"
-                                                <?php endif; ?>>
-
-                                                <source
-                                                    src="<?php echo esc_url($video_url); ?>"
-                                                    type="video/mp4">
-
-                                            </video>
-
-                                            <button
-                                                type="button"
-                                                class="project-item__play"
-                                                aria-label="<?php esc_attr_e('play video', 'mmdwc'); ?>">
-                                            </button>
-
-                                        </div>
-
-                                        <!-- END PROJECT ITEM VIDEO ------------------------------------------------------------------------------------------------>
-                                    <?php else : ?>
-
-                                        <!-- PROJECT ITEM THUMBNAIL ------------------------------------------------------------------------------------------------>
-
-                                        <div class="media-container media-container--16-9">
-
-                                            <?php the_post_thumbnail('large'); ?>
-
-                                        </div>
-
-                                        <!-- END PROJECT ITEM THUMBNAIL ------------------------------------------------------------------------------------------------>
-
-                                    <?php endif; ?>
+                                    <?php
+                                    the_post_thumbnail(
+                                        'image_square',
+                                        [
+                                            'sizes' => '(max-width: 768px) 100vw, 50vw',
+                                        ]
+                                    );
+                                    ?>
 
                                 </div>
 
                             <?php endif; ?>
 
-                            <!-- END PROJECT ITEM MEDIA ------------------------------------------------------------------------------------------------>
+                        </div>
 
-                            <!-- PROJECT ITEM HEADER ------------------------------------------------------------------------------------------------>
+                        <!-- END PROJECT ITEM IMAGE ------------------------------------------------------------------------------------------------>
 
-                            <div class="project-item__header">
+                        <!-- PROJECT ITEM CONTENT ------------------------------------------------------------------------------------------------>
 
-                                <div class="title-date project-item__date">
+                        <div class="project-item__content">
 
-                                    <?php echo esc_html(get_the_date('F j, Y')); ?>
+                            <div class="project-item__content-inner">
 
-                                </div>
+                                <?php if ($date) : ?>
+
+                                    <div class="title-date project-item__date">
+
+                                        <?php echo $date; ?>
+
+                                    </div>
+
+                                <?php endif; ?>
 
                                 <?php if ($title || $sub_title || $sub_title_2) : ?>
 
@@ -209,237 +135,63 @@
 
                                 <?php endif; ?>
 
-                            </div>
+                                <?php if (get_the_content()) : ?>
 
-                            <!-- END PROJECT ITEM HEADER ------------------------------------------------------------------------------------------------>
+                                    <div class="project-item__main-text p--big">
 
-                            <!-- PROJECT ITEM BODY ------------------------------------------------------------------------------------------------>
-
-                            <div class="project-item__body">
-
-                                <!-- PROJECT ITEM LEFT COLUMN ------------------------------------------------------------------------------------------------>
-
-                                <div class="left-column project-item__left-column">
-
-                                    <?php if (!empty($left_column['title'])) : ?>
-
-                                        <h3 class="left-column-title item-title project-item__left-column-title">
-
-                                            <?php echo esc_html($left_column['title']); ?>
-
-                                        </h3>
-
-                                    <?php endif; ?>
-
-                                    <?php if (!empty($left_column['text'])) : ?>
-
-                                        <div class="left-column-text project-item__left-column-text p--normal">
-
-                                            <?php echo wp_kses_post($left_column['text']); ?>
-
-                                        </div>
-
-                                    <?php endif; ?>
-
-                                </div>
-
-                                <!-- END PROJECT ITEM LEFT COLUMN ------------------------------------------------------------------------------------------------>
-
-                                <!-- PROJECT ITEM RIGHT COLUMN ------------------------------------------------------------------------------------------------>
-
-                                <div class="right-column project-item__right-column">
-
-                                    <?php if (get_the_content()) : ?>
-
-                                        <div class="project-item__main-text p--big">
-
-                                            <?php the_content(); ?>
-
-                                        </div>
-
-                                    <?php endif; ?>
-
-                                    <?php if ($text) : ?>
-
-                                        <div class="project-item__text p--normal">
-
-                                            <?php echo wp_kses_post($text); ?>
-
-                                        </div>
-
-                                    <?php endif; ?>
-
-                                    <?php if ($link) : ?>
-
-                                        <a
-                                            href="<?php echo esc_url($link['url']); ?>"
-                                            class="custom-button project-item__link"
-                                            <?php echo $link['target'] ? 'target="' . esc_attr($link['target']) . '"' : ''; ?>>
-
-                                            <?php echo esc_html($link['title']); ?>
-
-                                        </a>
-
-                                    <?php endif; ?>
-
-                                    <?php if ($file && $file['file'] && $file['text']) : ?>
-
-                                        <a
-                                            href="<?php echo esc_url($file['file']); ?>"
-                                            class="custom-button project-item__file"
-                                            download>
-
-                                            <?php echo esc_html($file['text']); ?>
-
-                                        </a>
-
-                                    <?php endif; ?>
-
-                                </div>
-
-                                <!-- END PROJECT ITEM RIGHT COLUMN ------------------------------------------------------------------------------------------------>
-
-                            </div>
-
-                            <!-- END PROJECT ITEM BODY ------------------------------------------------------------------------------------------------>
-
-                        </article>
-
-                        <!-- END PROJECT ITEM WITH LEFT COLUMN ------------------------------------------------------------------------------------------------>
-
-                    <?php else : ?>
-
-                        <!-- PROJECT ITEM STANDARD ------------------------------------------------------------------------------------------------>
-
-                        <article class="project-item<?php echo $project_index % 2 ? ' project-item--reverse' : ''; ?>">
-
-                            <!-- PROJECT ITEM IMAGE ------------------------------------------------------------------------------------------------>
-
-                            <div class="project-item__image">
-
-                                <?php if (has_post_thumbnail()) : ?>
-
-                                    <div class="media-container media-container--square">
-
-                                        <?php the_post_thumbnail('image_square'); ?>
+                                        <?php the_content(); ?>
 
                                     </div>
 
                                 <?php endif; ?>
 
-                            </div>
+                                <?php if ($text) : ?>
 
-                            <!-- END PROJECT ITEM IMAGE ------------------------------------------------------------------------------------------------>
+                                    <div class="project-item__text p--normal">
 
-                            <!-- PROJECT ITEM CONTENT ------------------------------------------------------------------------------------------------>
-
-                            <div class="project-item__content">
-
-                                <div class="project-item__content-inner">
-
-                                    <div class="title-date project-item__date">
-
-                                        <?php echo esc_html(get_the_date('F j, Y')); ?>
+                                        <?php echo wp_kses_post($text); ?>
 
                                     </div>
 
-                                    <?php if ($title || $sub_title || $sub_title_2) : ?>
+                                <?php endif; ?>
 
-                                        <h3 class="item-title project-item__title">
+                                <?php if ($link) : ?>
 
-                                            <?php if ($title) : ?>
+                                    <a
+                                        href="<?php echo esc_url($link['url']); ?>"
+                                        class="custom-button project-item__link"
+                                        <?php echo $link['target'] ? 'target="' . esc_attr($link['target']) . '"' : ''; ?>>
 
-                                                <strong>
+                                        <?php echo esc_html($link['title']); ?>
 
-                                                    <?php echo esc_html($title); ?>
+                                    </a>
 
-                                                </strong>
+                                <?php endif; ?>
 
-                                            <?php endif; ?>
+                                <?php if ($file && $file['file'] && $file['text']) : ?>
 
-                                            <?php if ($sub_title) : ?>
+                                    <a
+                                        href="<?php echo esc_url($file['file']); ?>"
+                                        class="custom-button project-item__file"
+                                        download>
 
-                                                <span>
+                                        <?php echo esc_html($file['text']); ?>
 
-                                                    <?php echo esc_html($sub_title); ?>
+                                    </a>
 
-                                                </span>
-
-                                            <?php endif; ?>
-
-                                            <?php if ($sub_title_2) : ?>
-
-                                                <span class="sub-title-2">
-
-                                                    <?php echo esc_html($sub_title_2); ?>
-
-                                                </span>
-
-                                            <?php endif; ?>
-
-                                        </h3>
-
-                                    <?php endif; ?>
-
-                                    <?php if (get_the_content()) : ?>
-
-                                        <div class="project-item__main-text p--big">
-
-                                            <?php the_content(); ?>
-
-                                        </div>
-
-                                    <?php endif; ?>
-
-                                    <?php if ($text) : ?>
-
-                                        <div class="project-item__text p--normal">
-
-                                            <?php echo wp_kses_post($text); ?>
-
-                                        </div>
-
-                                    <?php endif; ?>
-
-                                    <?php if ($link) : ?>
-
-                                        <a
-                                            href="<?php echo esc_url($link['url']); ?>"
-                                            class="custom-button project-item__link"
-                                            <?php echo $link['target'] ? 'target="' . esc_attr($link['target']) . '"' : ''; ?>>
-
-                                            <?php echo esc_html($link['title']); ?>
-
-                                        </a>
-
-                                    <?php endif; ?>
-
-                                    <?php if ($file && $file['file'] && $file['text']) : ?>
-
-                                        <a
-                                            href="<?php echo esc_url($file['file']); ?>"
-                                            class="custom-button project-item__file"
-                                            download>
-
-                                            <?php echo esc_html($file['text']); ?>
-
-                                        </a>
-
-                                    <?php endif; ?>
-
-                                </div>
+                                <?php endif; ?>
 
                             </div>
 
-                            <!-- END PROJECT ITEM CONTENT ------------------------------------------------------------------------------------------------>
+                        </div>
 
-                        </article>
+                        <!-- END PROJECT ITEM CONTENT ------------------------------------------------------------------------------------------------>
 
-                        <!-- END PROJECT ITEM STANDARD ------------------------------------------------------------------------------------------------>
+                    </article>
 
-                        <?php $project_index++; ?>
+                    <!-- END PROJECT ITEM STANDARD ------------------------------------------------------------------------------------------------>
 
-                    <?php endif; ?>
+                    <?php $project_index++; ?>
 
                 <?php endwhile; ?>
 

@@ -4,7 +4,7 @@
 // RESET CSS
 //////////////////////////////////////////////////////////////
 
-add_action('wp_enqueue_scripts', 'theme_load_reset_css', 5);
+// add_action('wp_enqueue_scripts', 'theme_load_reset_css', 5);
 
 function theme_load_reset_css()
 {
@@ -180,6 +180,29 @@ function theme_load_swiper()
 }
 
 //////////////////////////////////////////////////////////////
+// RELLAX
+//////////////////////////////////////////////////////////////
+
+add_action('wp_enqueue_scripts', 'theme_load_rellax', 26);
+
+function theme_load_rellax()
+{
+	if (!is_page_template('page-ABOUT.php')) {
+		return;
+	}
+
+	$rellax_js_path = get_template_directory() . '/assets/vendor/rellax/rellax.min.js';
+
+	wp_enqueue_script(
+		'rellax',
+		get_template_directory_uri() . '/assets/vendor/rellax/rellax.min.js',
+		array(),
+		file_exists($rellax_js_path) ? filemtime($rellax_js_path) : null,
+		true
+	);
+}
+
+//////////////////////////////////////////////////////////////
 // THEME CSS
 //////////////////////////////////////////////////////////////
 
@@ -207,10 +230,20 @@ function theme_load_scripts()
 {
 	$functions_js_path = get_template_directory() . '/assets/js/functions.js';
 
+	$dependencies = array('jquery');
+
+	if (hamrei_uses_swiper()) {
+		$dependencies[] = 'swiper';
+	}
+
+	if (is_page_template('page-ABOUT.php')) {
+		$dependencies[] = 'rellax';
+	}
+
 	wp_enqueue_script(
 		'functions',
 		get_template_directory_uri() . '/assets/js/functions.js',
-		hamrei_uses_swiper() ? array('jquery', 'swiper') : array('jquery'),
+		$dependencies,
 		file_exists($functions_js_path) ? filemtime($functions_js_path) : null,
 		true
 	);
@@ -224,7 +257,10 @@ add_action('wp_enqueue_scripts', 'theme_load_hero_videos', 30);
 
 function theme_load_hero_videos()
 {
-	if (!is_page_template('page-HOME.php')) {
+	if (
+		!is_page_template('page-HOME.php') &&
+		!is_page_template('page-COMMING-SOON.php')
+	) {
 		return;
 	}
 
@@ -298,4 +334,9 @@ function hamrei_remove_woocommerce_scripts()
 	wp_dequeue_script('wc-js-cookie');
 	wp_dequeue_script('woocommerce');
 	wp_dequeue_script('wc-cart-fragments');
+	wp_dequeue_script('sourcebuster-js');
+	wp_dequeue_script('wc-order-attribution');
+	wp_dequeue_style('woocommerce-general');
+	wp_dequeue_style('woocommerce-layout');
+	wp_dequeue_style('woocommerce-smallscreen');
 }

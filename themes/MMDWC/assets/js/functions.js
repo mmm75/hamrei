@@ -1,13 +1,18 @@
 (function ($) {
   $(document).ready(function () {
-    // Always start the page at the top on initial load
-    window.scrollTo(0, 0);
+    // Start at the top except when returning through browser history
+    const navigation = performance.getEntriesByType('navigation')[0];
+
+    if (!navigation || navigation.type !== 'back_forward') {
+      window.scrollTo(0, 0);
+    }
     headerHomeScroll();
     headerScroll();
     initHighlightVideos();
     collectionGridSizeControls();
     collectionInfiniteScroll();
     aboutStudioSlider();
+    initRellax();
     pieceSpecsAccordion();
     pieceGoBack();
     projectVideos();
@@ -16,7 +21,35 @@
     shopRowItemsCarousel();
     headerMobile();
     headerMobileHomeScroll();
+    mailchimp();
   });
+
+  function initRellax() {
+    if (window.matchMedia('(max-width: 991px)').matches) {
+      return;
+    }
+
+    const elements = document.querySelectorAll('.parallax');
+
+    if (!elements.length || typeof Rellax === 'undefined') {
+      return;
+    }
+
+    const rellax = new Rellax('.parallax', {
+      center: true,
+      round: false,
+      vertical: true,
+      horizontal: false,
+    });
+
+    window.addEventListener(
+      'load',
+      function () {
+        rellax.refresh();
+      },
+      { once: true },
+    );
+  }
 
   function headerHomeScroll() {
     const $header = $('#header');
@@ -59,6 +92,19 @@
     scrollHeader.classList.add('header-scroll');
 
     let lastScrollTop = window.scrollY;
+
+    // Always show the header when returning with Back / Forward
+    window.addEventListener('pageshow', function (event) {
+      const navigation = performance.getEntriesByType('navigation')[0];
+
+      if (
+        event.persisted ||
+        (navigation && navigation.type === 'back_forward')
+      ) {
+        scrollHeader.classList.remove('is-hidden');
+        lastScrollTop = window.scrollY;
+      }
+    });
 
     window.addEventListener('scroll', function () {
       const scrollTop = window.scrollY;
@@ -142,27 +188,87 @@
 
   function collectionInfiniteScroll() {
     const $grid = $('#collection-grid');
-    const $pagination = $('#collection-pagination');
 
-    // Stop if the current page does not contain the Collection grid or pagination
-    if (!$grid.length || !$pagination.length) {
+    // Stop if the current page does not contain the Collection grid
+    if (!$grid.length) {
       return;
     }
 
-    // Prevent multiple page requests from running at the same time
+    const storageKey = 'hamreiCollectionState';
+    const currentUrl = window.location.pathname + window.location.search;
+
+    const navigation = performance.getEntriesByType('navigation')[0];
+    const isHistoryNavigation =
+      navigation && navigation.type === 'back_forward';
+
+    // Restore the Collection exactly as it was before opening a Piece
+    if (isHistoryNavigation) {
+      try {
+        const storedState = JSON.parse(sessionStorage.getItem(storageKey));
+
+        if (storedState && storedState.url === currentUrl) {
+          $grid.html(storedState.gridHtml);
+
+          const $currentPagination = $('#collection-pagination');
+
+          if (storedState.paginationHtml !== null) {
+            if ($currentPagination.length) {
+              $currentPagination.html(storedState.paginationHtml);
+            }
+          } else {
+            $currentPagination.remove();
+          }
+
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              window.scrollTo(0, storedState.scrollY);
+            });
+          });
+        }
+      } catch (error) {
+        // Ignore invalid or unavailable sessionStorage
+      }
+    }
+
+    // Save the complete current Collection before opening a Piece.
+    // Event delegation also catches Pieces added by infinite scroll.
+    $grid.on('click', '.collection-grid__image', function () {
+      const $currentPagination = $('#collection-pagination');
+
+      try {
+        sessionStorage.setItem(
+          storageKey,
+          JSON.stringify({
+            url: currentUrl,
+            scrollY: window.scrollY,
+            gridHtml: $grid.html(),
+            paginationHtml: $currentPagination.length
+              ? $currentPagination.html()
+              : null,
+          }),
+        );
+      } catch (error) {
+        // Ignore unavailable sessionStorage
+      }
+    });
+
+    const $pagination = $('#collection-pagination');
+
+    // No more pages to load
+    if (!$pagination.length) {
+      return;
+    }
+
     let loading = false;
 
-    // Watch the hidden pagination element and load the next page before reaching it
     const observer = new IntersectionObserver(
       function (entries) {
         if (!entries[0].isIntersecting || loading) {
           return;
         }
 
-        // Get the native WordPress next-page URL
         const $nextLink = $pagination.find('a');
 
-        // Stop observing when there are no more pages
         if (!$nextLink.length) {
           observer.disconnect();
           return;
@@ -170,42 +276,43 @@
 
         loading = true;
 
-        // Load the next native WordPress archive page
         $.get($nextLink.attr('href'), function (response) {
           const $response = $(response);
 
-          // Extract only the Collection items from the returned page
           const $items = $response.find(
             '#collection-grid .collection-grid__item',
           );
 
-          // Get the next native pagination link from the returned page
           const $nextPageLink = $response.find('#collection-pagination a');
 
-          // Append the new items to the existing grid
           $grid.append($items);
 
           if ($nextPageLink.length) {
-            // Replace the pagination URL with the following WordPress page
             $pagination.html($nextPageLink);
           } else {
-            // Remove pagination and stop observing after the final page
             $pagination.remove();
             observer.disconnect();
           }
         }).always(function () {
-          // Allow another request once the current one has finished
           loading = false;
         });
       },
       {
-        // Start loading before the pagination element reaches the viewport
         rootMargin: '0px 0px 200% 0px',
       },
     );
 
-    // Start watching the hidden native pagination element
-    observer.observe($pagination[0]);
+    if (document.readyState === 'complete') {
+      observer.observe($pagination[0]);
+    } else {
+      window.addEventListener(
+        'load',
+        function () {
+          observer.observe($pagination[0]);
+        },
+        { once: true },
+      );
+    }
   }
 
   function initHighlightVideos() {
@@ -215,37 +322,56 @@
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target;
+    function loadVideos() {
+      videos.forEach((video) => {
+        const source = video.querySelector(
+          'source[data-src-mobile][data-src-desktop]',
+        );
 
-          if (entry.isIntersecting) {
-            const source = video.querySelector('source[data-src]');
+        if (!source) {
+          return;
+        }
 
-            if (source) {
-              source.src = source.dataset.src;
+        source.src =
+          window.innerWidth <= 768
+            ? source.dataset.srcMobile
+            : source.dataset.srcDesktop;
 
-              source.removeAttribute('data-src');
+        source.removeAttribute('data-src-mobile');
+        source.removeAttribute('data-src-desktop');
 
-              video.load();
+        video.preload = 'auto';
+        video.load();
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target;
+
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
             }
+          });
+        },
+        {
+          rootMargin: '0px',
+          threshold: 0.01,
+        },
+      );
 
-            video.play().catch(() => {});
-          } else {
-            video.pause();
-          }
-        });
-      },
-      {
-        rootMargin: '0px',
-        threshold: 0.01,
-      },
-    );
+      videos.forEach((video) => {
+        observer.observe(video);
+      });
+    }
 
-    videos.forEach((video) => {
-      observer.observe(video);
-    });
+    if (document.readyState === 'complete') {
+      loadVideos();
+    } else {
+      window.addEventListener('load', loadVideos, { once: true });
+    }
   }
 
   function aboutStudioSlider() {
@@ -505,5 +631,39 @@
     });
 
     updateHeader();
+  }
+
+  function mailchimp() {
+    $('.mailchimp').each(function () {
+      const $mailchimp = $(this);
+      const $form = $mailchimp.find('.pfb-signup-submission');
+      const $message = $mailchimp.find('.mailchimp__message');
+
+      $form.on('submit', function (event) {
+        event.preventDefault();
+
+        $message.text('');
+
+        $.ajax({
+          type: 'POST',
+          url: $form.data('ajax-url'),
+          dataType: 'json',
+          data: $form.serialize(),
+
+          success: function (response) {
+            if (response.success) {
+              $form[0].reset();
+              $message.text($form.data('success-message'));
+            } else {
+              $message.text($form.data('error-message'));
+            }
+          },
+
+          error: function () {
+            $message.text($form.data('error-message'));
+          },
+        });
+      });
+    });
   }
 })(jQuery);

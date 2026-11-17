@@ -12,8 +12,6 @@
 
         <div class="films__grid">
 
-            <?php $film_index = 0; ?>
-
             <?php while (have_posts()) : the_post(); ?>
 
                 <?php
@@ -21,6 +19,7 @@
                 $title = get_field('title');
                 $sub_title = get_field('sub-title');
                 $sub_title_2 = get_field('sub-title_2');
+                $date = get_field("date");
 
                 $video = get_field('video');
 
@@ -30,7 +29,7 @@
 
                 ?>
 
-                <article class="films__item<?php echo $film_index === 0 ? ' films__item--featured' : ''; ?>">
+                <article class="films__item">
 
                     <a
                         href="<?php the_permalink(); ?>"
@@ -48,11 +47,15 @@
 
                         <div class="films__content">
 
-                            <div class="title-date films__date">
+                            <?php if ($date) : ?>
 
-                                <?php echo get_the_date('F j, Y'); ?>
+                                <div class="title-date films__date">
 
-                            </div>
+                                    <?php echo $date; ?>
+
+                                </div>
+
+                            <?php endif; ?>
 
                             <?php if ($title || $sub_title || $sub_title_2) : ?>
 
@@ -97,8 +100,6 @@
                     </a>
 
                 </article>
-
-                <?php $film_index++; ?>
 
             <?php endwhile; ?>
 
